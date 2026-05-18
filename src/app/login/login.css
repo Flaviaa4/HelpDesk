@@ -1,0 +1,258 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  background: rgba(173, 198, 230, 0.45);
+  pointer-events: none;
+}
+
+.blob-top-left {
+  width: 260px;
+  height: 130px;
+  top: 50%;
+  left: -80px;
+  transform: rotate(-25deg);
+  border-radius: 60% 40% 60% 40%;
+}
+
+.blob-top-right {
+  width: 210px;
+  height: 110px;
+  top: 24%;
+  right: -60px;
+  transform: rotate(20deg);
+  border-radius: 40% 60% 40% 60%;
+}
+
+.blob-bottom-center {
+  width: 240px;
+  height: 120px;
+  bottom: -12%;
+  left: 50%;
+  transform: translateX(-50%) rotate(-10deg);
+  border-radius: 50% 50% 40% 60%;
+}
+
+.header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.header-logo {
+  height: 6rem;
+  width: auto;
+}
+
+.login-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  padding: 1rem;
+  margin-top: -8rem;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 2.5rem 2.25rem 4rem;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: 0 4px 24px rgba(20, 57, 106, 0.10);
+}
+
+.card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #14396A;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.8rem 0.875rem 0.8rem 2.6rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #14396A;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+
+.input-field::placeholder {
+  color: #B0BAC9;
+}
+
+.input-field:focus {
+  border-color: #14396A;
+  box-shadow: 0 0 0 3px rgba(20, 57, 106, 0.08);
+}
+
+.btn-login {
+  width: 100%;
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  margin-bottom: 1.25rem;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-login:hover {
+  background: #1a4f96;
+}
+
+.btn-login:active {
+  transform: scale(0.98);
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.875rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  color: #9AA0AC;
+  cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #14396A;
+}
+
+.forgot-link {
+  font-size: 0.82rem;
+  color: #9AA0AC;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.forgot-link:hover {
+  color: #14396A;
+}
+
+.signup-row {
+  text-align: center;
+  font-size: 0.83rem;
+  color: #9AA0AC;
+  margin-top: 1.5rem;
+}
+
+.signup-row a {
+  color: #14396A;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signup-row a:hover {
+  text-decoration: underline;
+}
+
+.error-msg {
+  color: #E05C00;
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .header-logo {
+    height: 4.5rem;
+  }
+
+  .login-wrap {
+    padding: 1rem;
+    margin-top: 0;
+  }
+
+  .card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .blob-top-left,
+  .blob-top-right,
+  .blob-bottom-center {
+    display: none;
+  }
+
+  .card {
+    padding: 1.5rem 1rem;
+    border-radius: 8px;
+  }
+
+  .btn-login {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .footer-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
