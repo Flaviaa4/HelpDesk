@@ -1,59 +1,57 @@
-# ItHelpdeskApp
+# HelpDesk System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+## About the Project
+The HelpDesk System is a simple web application that helps people report IT problems (like internet issues or device failures),
+and track how those problems are being solved.
+It is designed to make communication between users and IT support teams easier and more organized.
 
-## Development server
+## What the System Does
 
-To start a local development server, run:
+## For Users:
+- Report a problem (create a ticket)
+- Describe the issue
+- Track the progress of their request
 
-```bash
-ng serve
-```
+## For Admins:
+- View all reported issues
+- Manage and resolve problems
+- Prioritize urgent requests
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+## How the System Works
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The system has three main parts:
 
-```bash
-ng generate component component-name
-```
+- **Frontend:** User interface and interactions  
+- **Backend:** Handles logic and communication between the database and the responses that the user will get
+- **Database:** Stores all information (users, tickets, comments)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
-```
+## What Has Been Built So Far
 
-## Building
+### User System
+- Users can create accounts (register)
+- Users can log in
 
-To build the project run:
+## Tools & Technologies Used
 
-```bash
-ng build
-```
+- **Angular CLI** - for project development & building
+- **VS Code** – for development
+- **Git & GitHub** – for version control
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Challenges Faced
 
-## Running unit tests
+During development, some challenges included:
+- Fixing errors and debugging code
+- Managing project structure
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## What’s Next
 
-```bash
-ng test
-```
+The next steps are:
+- Building other pages including User & Admin dashboards
 
-## Running end-to-end tests
+## Author
+Flavienne    
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Purpose of This Project
+This project is part of a learning journey to build a real-world system that solves practical problems and improves how people manage IT support.
