@@ -1,0 +1,418 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: #F0F4F8;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.header {
+  flex-shrink: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #E2E5EC;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 2rem;
+  box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
+  z-index: 100;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-user svg {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.header-username {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #14396A;
+}
+
+.header-logo img {
+  height: 4rem;
+  width: auto;
+}
+
+.dashboard-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 200px;
+  min-width: 200px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-shadow: 2px 0 8px rgba(20, 57, 106, 0.06);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #14396A;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.nav-item:hover {
+  background: #F0F4F8;
+  color: #14396A;
+}
+
+.nav-item.active {
+  background: #14396A;
+  color: #ffffff;
+}
+
+.nav-item svg {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.sidebar-illustration {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.sidebar-illustration img {
+  width: 100%;
+  max-width: 130px;
+  opacity: 0.85;
+}
+
+.sidebar-bottom {
+  padding: 0.5rem 1.5rem;
+  border-top: 2px solid #E2E5EC;
+}
+
+.main {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+
+}
+
+.welcome-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
+  gap: 20px;
+}
+
+.welcome-text {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #14396A;
+  margin-bottom: 1rem;
+}
+
+.stats-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 100px;
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-card.open {
+  background: #C8D8ED;
+}
+
+.stat-card.progress {
+  background: #F5C97A;
+}
+
+.stat-card.resolved {
+  background: #7DC87D;
+}
+
+.stat-label {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #14396A;
+}
+
+.stat-sub {
+  font-size: 1rem;
+  color: rgba(20, 57, 106, 0.65);
+  margin-top: 2px;
+}
+
+.stat-count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #14396A;
+}
+
+.tickets-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  gap: 2rem;
+  box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
+}
+
+.tickets-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #14396A;
+  margin-bottom: 1.25rem;
+}
+
+.tickets-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tickets-table th {
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #14396A;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #E2E5EC;
+}
+
+.tickets-table td {
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  color: #14396A;
+  border-bottom: 1px solid #F0F4F8;
+  text-align: left;
+}
+
+.tickets-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.badge-medium {
+  background: #F5A623;
+}
+
+.badge-high {
+  background: #E05C00;
+}
+
+.badge-low {
+  background: #3D9B3D;
+}
+
+.badge-open {
+  background: #E05C00;
+}
+
+.badge-resolved {
+  background: #3D9B3D;
+}
+
+.badge-progress {
+  background: #F5A623;
+}
+
+.btn-submit-ticket {
+  display: block;
+  margin: 1.5rem auto 0;
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-submit-ticket:hover {
+  background: #1a4f96;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 1rem;
+  }
+
+  .header-username {
+    font-size: 0.85rem;
+  }
+
+  .header-logo img {
+    height: 2.5rem;
+  }
+
+  .sidebar {
+    width: 60px;
+    min-width: 60px;
+  }
+
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 0.875rem 0;
+  }
+
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sidebar-illustration {
+    display: none;
+  }
+
+  .main {
+    padding: 1.25rem 1rem;
+  }
+
+  .stats-row {
+    flex-direction: column;
+  }
+
+  .stat-card {
+    min-width: unset;
+  }
+
+  .tickets-table th,
+  .tickets-table td {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  .welcome-text {
+    font-size: 0.9rem;
+  }
+
+  .stat-count {
+    font-size: 1.5rem;
+  }
+
+  .tickets-table th:nth-child(3),
+  .tickets-table td:nth-child(3) {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #E2E5EC;
+    box-shadow: 0 -2px 10px rgba(20, 57, 106, 0.08);
+    z-index: 200;
+    padding: 0.5rem 0;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0.5rem 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #9AA0AC;
+    text-decoration: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s;
+  }
+
+  .bottom-nav-item.active {
+    color: #14396A;
+  }
+
+  .bottom-nav-item:hover {
+    color: #14396A;
+  }
+
+  .bottom-nav-item svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .bottom-nav-item.danger {
+    color: #E05C00;
+  }
+
+  /* add padding to main so content doesn't hide behind bottom nav */
+  .main {
+    padding-bottom: 80px;
+  }
+}
