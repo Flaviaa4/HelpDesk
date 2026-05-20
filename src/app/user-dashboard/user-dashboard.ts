@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
@@ -9,13 +9,19 @@ import { RouterModule, Router } from '@angular/router';
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.css',
 })
-export class UserDashboard {
+export class UserDashboard implements OnInit {
+  userName        = '';
   recentTickets: any[] = [];
-  openCount = 0;
+  openCount       = 0;
   inProgressCount = 0;
-  resolvedCount = 0;
+  resolvedCount   = 0;
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userName = user.name || 'User';
+  }
 
   logout() {
     localStorage.removeItem('token');

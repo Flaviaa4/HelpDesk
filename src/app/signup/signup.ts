@@ -11,7 +11,7 @@ import { RouterModule, Router } from '@angular/router';
   styleUrl: './signup.css',
 })
 export class Signup {
-  name = '';
+  username= '';
   email = '';
   password = '';
   errorMsg = '';
@@ -20,7 +20,7 @@ export class Signup {
   constructor(private router: Router) {}
 
   register() {
-    if (!this.name || !this.email || !this.password) {
+    if (!this.username || !this.email || !this.password) {
       this.errorMsg = 'Please fill in all fields.';
       return;
     }
