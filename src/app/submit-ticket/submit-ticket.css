@@ -1,0 +1,264 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-x: hidden;
+  background: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.header {
+  flex-shrink: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #E2E5EC;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 2rem;
+  box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
+  z-index: 100;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-user svg {
+  width: 25px;
+  height: 25px;
+}
+
+.header-username {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #14396A;
+}
+
+.header-logo img {
+  height: 4rem;
+  width: auto;
+}
+
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2.5rem 3rem;
+  position: relative;
+}
+
+.blob {
+  position: absolute;
+  background: rgba(173, 198, 230, 0.35);
+  pointer-events: none;
+}
+
+.blob-left {
+  width: 220px;
+  height: 120px;
+  top: 35%;
+  left: -70px;
+  transform: rotate(-20deg);
+  border-radius: 60% 40% 60% 40%;
+}
+
+.blob-right {
+  width: 200px;
+  height: 110px;
+  top: 30%;
+  right: -60px;
+  transform: rotate(15deg);
+  border-radius: 40% 60% 40% 60%;
+}
+
+.form-header {
+  text-align: center;
+  margin-top: -1.5rem;
+}
+
+.form-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #14396A;
+}
+
+.form-subtitle {
+  font-size: 1rem;
+  color: #4c5976;
+}
+
+.form-card {
+  background: #ffffff;
+  border: 1px solid #E2E5EC;
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 750px;
+  margin: 1rem auto;
+  box-shadow: 0 2px 12px rgba(20, 57, 106, 0.06);
+  position: relative;
+  z-index: 1;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #14396A;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #14396A;
+  background: #fff;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-control:focus {
+  border-color: #14396A;
+  box-shadow: 0 0 0 3px rgba(20, 57, 106, 0.08);
+}
+
+.form-control::placeholder {
+  color: #B0BAC9;
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
+.form-group-full {
+  margin-bottom: 1.25rem;
+}
+
+.form-group-full .form-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #14396A;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-submit {
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover {
+  background: #1a4f96;
+}
+
+.btn-cancel {
+  background: #fff;
+  color: #14396A;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #F0F4F8;
+  border-color: #14396A;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0.50rem 1rem;
+  }
+
+  .header-username {
+    font-size: 0.85rem;
+  }
+
+  .header-logo img {
+    height: 2.5rem;
+  }
+
+  .main {
+    padding: 1.5rem 1rem;
+  }
+
+  .form-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .blob-left,
+  .blob-right {
+    display: none;
+  }
+
+  .main {
+    padding: 1.8rem;
+  }
+
+  .form-title {
+    font-size: 1.3rem;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
+
+  .btn-submit,
+  .btn-cancel {
+    width: 100%;
+  }
+}
