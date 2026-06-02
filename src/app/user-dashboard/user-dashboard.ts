@@ -10,6 +10,10 @@ import { RouterModule, Router } from '@angular/router';
   styleUrl: './user-dashboard.css',
 })
 export class UserDashboard implements OnInit {
+profileOpen: any;
+toggleProfile() {
+throw new Error('Method not implemented.');
+}
   userName        = '';
   recentTickets: any[] = [];
   openCount       = 0;

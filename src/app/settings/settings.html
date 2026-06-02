@@ -1,0 +1,160 @@
+<div class="page-wrap">
+  <div class="header">
+    <div class="header-logo">
+      <img src="Admin-Logo.png" alt="IT HelpDesk">
+    </div>
+
+    <div class="header-profile" (click)="toggleProfile()">
+
+      <div class="avatar-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+        </svg>
+      </div>
+
+      <svg class="header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
+
+      <div class="profile-dropdown" *ngIf="profileOpen">
+        <div class="profile-dropdown-header">
+          <div class="profile-dropdown-name">{{ userName }}</div>
+        </div>
+
+        <a class="dropdown-item">
+          Profile
+        </a>
+
+        <a class="dropdown-item active">
+          Settings
+        </a>
+
+        <button class="dropdown-item danger" (click)="logout()">
+          Sign out
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <div class="sidebar">
+
+      <a class="nav-item" routerLink="/admin-dashboard">
+        Dashboard
+      </a>
+
+      <a class="nav-item" routerLink="/tickets">
+        Tickets
+      </a>
+
+      <a class="nav-item" routerLink="/users">
+        Users
+      </a>
+
+    </div>
+    <div class="content">
+
+      <div class="page-header">
+        <h1>Settings</h1>
+        <p>Manage your account preferences and system configuration.</p>
+      </div>
+
+      <div class="settings-card">
+
+        <h2>Notifications</h2>
+
+        <div class="setting-row">
+          <span>Email Notifications</span>
+          <input type="checkbox">
+        </div>
+
+        <div class="setting-row">
+          <span>New Ticket Alerts</span>
+          <input type="checkbox" checked>
+        </div>
+
+        <div class="setting-row">
+          <span>Ticket Status Updates</span>
+          <input type="checkbox" checked>
+        </div>
+
+        <div class="setting-row">
+          <span>System Alerts</span>
+          <input type="checkbox" checked>
+        </div>
+
+        <button class="primary-btn">
+          Save Preferences
+        </button>
+
+      </div>
+      <div class="settings-card">
+
+        <h2>Change Password</h2>
+
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password">
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <input type="password">
+        </div>
+
+        <button class="primary-btn">
+          Change Password
+        </button>
+
+      </div>
+
+      <!-- SYSTEM PREFERENCES -->
+      <div class="settings-card">
+
+        <h2>System Preferences</h2>
+
+        <div class="form-group">
+          <label>Language</label>
+
+          <select>
+            <option>English</option>
+            <option>French</option>
+            <option>Kinyarwanda</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Timezone</label>
+
+          <select>
+            <option>Africa/Kigali (GMT +2)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Date Format</label>
+
+          <select>
+            <option>DD-MM-YYYY</option>
+            <option>MM-DD-YYYY</option>
+            <option>YYYY-MM-DD</option>
+          </select>
+        </div>
+
+        <button class="primary-btn">
+          Save System Settings
+        </button>
+
+        <button class="secondary-btn">
+          Reset to Default
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
