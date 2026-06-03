@@ -17,6 +17,10 @@ It is designed to make communication between users and IT support teams easier a
 - Manage and resolve problems
 - Prioritize urgent requests
 
+## Credentials of default users
+
+- Normal User (email: user@helpdesk.com, password: user1234)
+- Admin (email: admin@helpdesk.com, admin123)
 
 ## How the System Works
 
