@@ -8,6 +8,7 @@ import { AdminDashboard } from './admin-dashboard/admin-dashboard';
 import { Tickets } from './tickets/tickets';
 import { Users } from './users/users';
 import { SettingsComponent } from './settings/settings';
+import { ProfileComponent } from './profile/profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'admin-dashboard', component: AdminDashboard },
   { path: 'tickets', component: Tickets },
   { path: 'users', component: Users },
-  { path: 'settings', component: SettingsComponent }
+  { path: 'settings', component: SettingsComponent },
+  { path: 'profile', component: ProfileComponent }
 ];

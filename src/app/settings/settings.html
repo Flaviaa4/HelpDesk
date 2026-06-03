@@ -56,104 +56,108 @@
     </div>
     <div class="content">
 
-      <div class="page-header">
-        <h1>Settings</h1>
-        <p>Manage your account preferences and system configuration.</p>
+  <div class="page-header">
+    <h1>Settings</h1>
+    <p>Manage your account preferences and system configuration.</p>
+  </div>
+
+  <div class="top-row">
+
+    <div class="settings-card">
+
+      <h2>Notifications</h2>
+
+      <div class="setting-row">
+        <span>Email Notifications</span>
+        <input type="checkbox">
       </div>
 
-      <div class="settings-card">
-
-        <h2>Notifications</h2>
-
-        <div class="setting-row">
-          <span>Email Notifications</span>
-          <input type="checkbox">
-        </div>
-
-        <div class="setting-row">
-          <span>New Ticket Alerts</span>
-          <input type="checkbox" checked>
-        </div>
-
-        <div class="setting-row">
-          <span>Ticket Status Updates</span>
-          <input type="checkbox" checked>
-        </div>
-
-        <div class="setting-row">
-          <span>System Alerts</span>
-          <input type="checkbox" checked>
-        </div>
-
-        <button class="primary-btn">
-          Save Preferences
-        </button>
-
-      </div>
-      <div class="settings-card">
-
-        <h2>Change Password</h2>
-
-        <div class="form-group">
-          <label>New Password</label>
-          <input type="password">
-        </div>
-
-        <div class="form-group">
-          <label>Confirm Password</label>
-          <input type="password">
-        </div>
-
-        <button class="primary-btn">
-          Change Password
-        </button>
-
+      <div class="setting-row">
+        <span>New Ticket Alerts</span>
+        <input type="checkbox" checked>
       </div>
 
-      <!-- SYSTEM PREFERENCES -->
-      <div class="settings-card">
+      <div class="setting-row">
+        <span>Ticket Status Updates</span>
+        <input type="checkbox" checked>
+      </div>
 
-        <h2>System Preferences</h2>
+      <div class="setting-row">
+        <span>System Alerts</span>
+        <input type="checkbox" checked>
+      </div>
 
-        <div class="form-group">
-          <label>Language</label>
+      <button class="primary-btn">
+        Save Changes
+      </button>
 
-          <select>
-            <option>English</option>
-            <option>French</option>
-            <option>Kinyarwanda</option>
-          </select>
-        </div>
+    </div>
+    <div class="settings-card">
 
-        <div class="form-group">
-          <label>Timezone</label>
+      <h2>Change Password</h2>
 
-          <select>
-            <option>Africa/Kigali (GMT +2)</option>
-          </select>
-        </div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password">
+      </div>
 
-        <div class="form-group">
-          <label>Date Format</label>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password">
+      </div>
 
-          <select>
-            <option>DD-MM-YYYY</option>
-            <option>MM-DD-YYYY</option>
-            <option>YYYY-MM-DD</option>
-          </select>
-        </div>
+      <button class="primary-btn">
+        Change Password
+      </button>
 
-        <button class="primary-btn">
-          Save System Settings
-        </button>
+    </div>
 
-        <button class="secondary-btn">
-          Reset to Default
-        </button>
+  </div>
 
+  <div class="settings-card system-card">
+
+    <h2>System Preferences</h2>
+
+    <div class="preferences-grid">
+
+      <div class="form-group">
+        <label>Language</label>
+        <select>
+          <option>English</option>
+          <option>French</option>
+          <option>Kinyarwanda</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Timezone</label>
+        <select>
+          <option>Africa/Kigali (GMT+2)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Date Format</label>
+        <select>
+          <option>DD-MM-YYYY</option>
+          <option>MM-DD-YYYY</option>
+          <option>YYYY-MM-DD</option>
+        </select>
       </div>
 
     </div>
+
+    <button class="primary-btn">
+      Save Preferences
+    </button>
+
+    <button class="secondary-btn">
+      Reset to Default
+    </button>
+
+  </div>
+
+</div>
 
   </div>
 
