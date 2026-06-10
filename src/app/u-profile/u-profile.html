@@ -1,0 +1,211 @@
+<div class="page-wrap">
+
+  <div class="header">
+
+    <div class="header-logo">
+      <img src="user-logo.png" alt="IT HelpDesk">
+    </div>
+
+    <div class="header-profile"
+         (click)="toggleProfile(); $event.stopPropagation()">
+
+      <div class="avatar-circle">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             fill="#ffffff">
+          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+        </svg>
+      </div>
+
+      <svg class="header-chevron"
+           xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24"
+           fill="currentColor">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
+
+      <div class="profile-dropdown" *ngIf="profileOpen">
+
+        <div class="profile-dropdown-header">
+          <div class="profile-dropdown-name">
+            {{ fullName }}
+          </div>
+        </div>
+
+        <a class="dropdown-item" routerLink="/u-settings">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="ffffff">
+          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+        Settings
+      </a>
+
+         <button class="dropdown-item danger" (click)="logout()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+          </svg>
+          Sign out
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="page-body">
+
+    <div class="sidebar">
+
+      <a class="nav-item"
+         routerLink="/user-dashboard">
+        Dashboard
+      </a>
+
+      <a class="nav-item"
+         routerLink="/submit-ticket">
+        Submit Ticket
+      </a>
+
+      <a class="nav-item"
+         routerLink="/ticket-history">
+        Ticket History
+      </a>
+
+    </div>
+
+    <div class="content">
+
+      <div class="manager-card">
+
+        <h1>Profile</h1>
+
+        <p>
+          Manage your account information.
+        </p>
+
+      </div>
+
+      <div class="profile-layout">
+
+        <div class="profile-card">
+
+          <div class="profile-top">
+
+            <div class="profile-avatar">
+
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   viewBox="0 0 24 24"
+                   fill="#14396A">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+              </svg>
+
+            </div>
+
+            <div>
+
+              <h2>{{ fullName }}</h2>
+
+              <p>{{ role }}</p>
+
+              <span>{{ email }}</span>
+
+            </div>
+
+          </div>
+
+          <div class="card-divider"></div>
+
+          <div class="card-header">
+
+            <h3>Personal Information</h3>
+
+            <button>Edit</button>
+
+          </div>
+
+          <div class="info-grid">
+
+            <div>
+              <label>Full Name</label>
+              <p>{{ fullName }}</p>
+            </div>
+
+            <div>
+              <label>Email Address</label>
+              <p>{{ email }}</p>
+            </div>
+
+            <div>
+              <label>Phone Number</label>
+              <p>+250 788 123 456</p>
+            </div>
+
+            <div>
+              <label>Role</label>
+              <p>{{ role }}</p>
+            </div>
+
+            <div>
+              <label>Department</label>
+              <p>Software Engineering</p>
+            </div>
+
+            <div>
+              <label>Employee ID</label>
+              <p>HD-001</p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="security-card">
+
+          <h3>Security Information</h3>
+
+          <div class="security-item">
+
+            <label>Last Login</label>
+
+            <p>Today 09:15 AM</p>
+
+          </div>
+
+          <div class="security-item">
+
+            <label>Account Status</label>
+
+            <span class="status-active">
+              Active
+            </span>
+
+          </div>
+
+          <div class="security-item">
+
+            <label>Two-Factor Authentication</label>
+
+            <p>Disabled</p>
+
+          </div>
+
+          <div class="security-item">
+
+            <label>Password Last Changed</label>
+
+            <p>14 Days Ago</p>
+
+          </div>
+
+          <button class="security-btn">
+            Security Settings
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

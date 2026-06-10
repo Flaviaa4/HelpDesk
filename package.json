@@ -1,12 +1,15 @@
 {
-  "name": "it-helpdesk-app",
+  "name": "frontend",
   "version": "0.0.0",
+  "homepage": "https://Flaviaa4.github.io/HelpDesk",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist/frontend/browser"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
@@ -24,6 +27,7 @@
     "@angular/build": "^21.2.0",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
+    "gh-pages": "^6.3.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

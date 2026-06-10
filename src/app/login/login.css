@@ -48,7 +48,7 @@
 }
 
 .header {
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 6rem;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -57,7 +57,7 @@
 }
 
 .header-logo {
-  height: 6rem;
+  height: 2.5rem;
   width: auto;
 }
 
@@ -215,7 +215,7 @@
   }
 
   .header-logo {
-    height: 4.5rem;
+    height: 3rem;
   }
 
   .login-wrap {

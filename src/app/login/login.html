@@ -6,7 +6,7 @@
 
   <div class="header">
     <img
-      src="User-Logo.png"
+      src="UserLogo.png"
       alt=""
       class="header-logo"
     />
@@ -15,7 +15,13 @@
   <div class="login-wrap">
     <div class="card">
 
-      <div class="card-title">Login</div>
+      <div class="card-title">
+        <img
+      src="user-logo.png"
+      alt=""
+      class="header-logo"
+    />
+      </div>
       <div class="input-group">
         <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#14396A">
           <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -31,7 +37,7 @@
       </div>
 
       <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
-<button class="btn-login" (click)="login()">Login</button>
+<button class="btn-login" (click)="login()">Sign In</button>
 
       <div class="footer-row">
         <label class="remember-me">
