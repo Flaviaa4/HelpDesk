@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-ticket-history',
@@ -12,42 +11,36 @@ import { RouterModule, Router } from '@angular/router';
   styleUrl: './ticket-history.css',
 })
 export class TicketHistory implements OnInit {
-toggleProfile() {
-throw new Error('Method not implemented.');
-}
-profileOpen: any;
-userName: any;
-logout() {
-throw new Error('Method not implemented.');
-}
+  profileOpen = false;
+  userName = 'User';
+
   searchTerm = '';
   selectedPriority = '';
   tickets: any[] = [];
   loading = true;
   api: any;
 
-  constructor(
-    private router: Router,
-  ) {}
+  constructor(private router: Router) {}
+
+  toggleProfile() {
+    this.profileOpen = !this.profileOpen;
+  }
+
+  @HostListener('document:click')
+  closeDropdown() {
+    this.profileOpen = false;
+  }
+
+  logout() {
+    console.log('User logged out');
+  }
 
   ngOnInit() {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.id) {
-      this.api.getUserTickets(user.id).subscribe({
-        next: (res: any) => {
-          this.tickets = res.tickets;
-          this.loading = false;
-        },
-        error: () => {
-          this.loading = false;
-        },
-      });
-    } else {
-      this.loading = false;
-    }
-  }
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  this.userName = user.name || 'User';
 
-  backto() {
-    this.router.navigate(['/user-dashboard']);
-  }
+  this.loading = false;
+
+
+}
 }

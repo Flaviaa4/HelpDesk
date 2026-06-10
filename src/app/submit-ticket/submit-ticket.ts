@@ -13,7 +13,6 @@ import { RouterModule, Router } from '@angular/router';
 export class SubmitTicket {
   title = '';
   description = '';
-  priority = '';
   category = '';
   createdOn = '';
   errorMsg = '';
@@ -35,7 +34,7 @@ export class SubmitTicket {
   }
 
   submitTicket() {
-    if (!this.title || !this.description || !this.priority) {
+    if (!this.title || !this.description || !this.category) {
       this.errorMsg = 'Please fill in all required fields.';
       return;
     }
@@ -50,7 +49,6 @@ export class SubmitTicket {
       user_id: user.id,
       title: this.title,
       description: this.description,
-      priority: this.priority,
       category: this.category,
     };
     this.api.createTicket(data).subscribe({

@@ -14,9 +14,6 @@ export class AdminDashboard {
   profileOpen: any;
   userName: any;
   menuOpen: boolean = false;
-  toggleProfile() {
-    throw new Error('Method not implemented.');
-  }
   searchTerm = '';
   selectedPriority = '';
   tickets: any[] = [];
@@ -25,10 +22,13 @@ export class AdminDashboard {
   resolvedCount = 0;
   totalCount = 0;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userName = user.name || 'Admin';
+  }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+  toggleProfile() {
+    this.profileOpen = !this.profileOpen;
   }
 
   logout() {

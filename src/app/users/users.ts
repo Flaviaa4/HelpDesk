@@ -17,7 +17,10 @@ export class Users {
   menuOpen = false;
   users: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userName = user.name || 'Admin';
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
