@@ -11,13 +11,19 @@ import { RouterModule, Router } from '@angular/router';
   styleUrl: './signup.css',
 })
 export class Signup {
-  username= '';
+  username = '';
   email = '';
   password = '';
   errorMsg = '';
   successMsg = '';
 
+  showPassword = false;
+
   constructor(private router: Router) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   register() {
     if (!this.username || !this.email || !this.password) {

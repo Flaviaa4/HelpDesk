@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-u-profile',
@@ -16,6 +16,8 @@ export class UProfile {
   role = 'Analyst';
   email = 'user@helpdesk.com';
 
+  constructor(private router: Router) {}
+
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
   }
@@ -26,6 +28,8 @@ export class UProfile {
   }
 
   logout() {
-    console.log('User logged out');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }

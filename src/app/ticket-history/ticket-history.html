@@ -12,11 +12,13 @@
         </svg>
       </div>
 
+    <svg class="header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M7 10l5 5 5-5z"/>
+    </svg>
 
       <div class="profile-dropdown" *ngIf="profileOpen" (click)="$event.stopPropagation()">
         <div class="profile-dropdown-header">
           <div class="profile-dropdown-name">{{ userName }}</div>
-          <div class="profile-dropdown-role">User</div>
         </div>
         <a class="dropdown-item" routerLink="/u-profile">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="ffffff">

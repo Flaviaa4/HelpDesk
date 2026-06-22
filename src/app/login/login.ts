@@ -15,7 +15,13 @@ export class Login {
   password = '';
   errorMsg = '';
 
+  showPassword = false;
+
   constructor(private router: Router) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   login() {
     if (!this.username || !this.password) {
@@ -32,3 +38,4 @@ export class Login {
     }
   }
 }
+

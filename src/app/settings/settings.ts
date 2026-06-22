@@ -25,10 +25,6 @@ export class SettingsComponent {
     this.profileOpen = false;
   }
 
-  logout() {
-    console.log('User logged out');
-  }
-
   savePreferences() {
     console.log('Notification preferences saved');
   }
@@ -43,5 +39,11 @@ export class SettingsComponent {
 
   resetSettings() {
     console.log('Settings reset to default');
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }

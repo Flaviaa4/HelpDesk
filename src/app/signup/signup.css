@@ -57,7 +57,7 @@
 }
 
 .header-logo {
-  height: 4rem;
+  height: 2.5rem;
   width: auto;
 }
 
@@ -124,6 +124,15 @@
 .input-field:focus {
   border-color: #14396A;
   box-shadow: 0 0 0 3px rgba(20, 57, 106, 0.08);
+}
+.eye-icon {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .remember-row {

@@ -1,11 +1,11 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterModule],
   templateUrl: './profile.html',
   styleUrls: ['./profile.css'],
 })
@@ -15,6 +15,11 @@ export class ProfileComponent {
   fullName = 'Admin User';
   role = 'Administrator';
   email = 'admin@helpdesk.com';
+
+  constructor(private router: Router) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  }
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
@@ -26,6 +31,8 @@ export class ProfileComponent {
   }
 
   logout() {
-    console.log('User logged out');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }
