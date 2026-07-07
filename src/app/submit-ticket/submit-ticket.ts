@@ -39,8 +39,8 @@ export class SubmitTicket {
       return;
     }
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (!user.id) {
-      this.errorMsg = 'You must be logged in to submit a ticket.';
+    if (user.id) {
+      this.errorMsg = 'Connection issues, try angain later.';
       return;
     }
     this.loading = true;

@@ -210,7 +210,6 @@
   border-top: 1px solid #E2E5EC;
 }
 
-/* ── MAIN ── */
 .main {
   flex: 1;
   padding: 2rem 2.5rem;
@@ -362,7 +361,6 @@ textarea.form-control {
   background: #F0F4F8;
 }
 
-/* ── BOTTOM NAV ── */
 .bottom-nav {
   display: none;
 }

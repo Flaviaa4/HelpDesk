@@ -384,85 +384,43 @@
   background: #1a4f96;
 }
 
+.bottom-nav {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.75rem 1rem;
   }
 
-  .header-username {
-    font-size: 0.85rem;
+  .header-logo img {
+    height: 36px;
   }
 
-  .header-logo img {
-    height: 2.5rem;
+  .page-body {
+    flex-direction: column;
   }
 
   .sidebar {
-    width: 60px;
-    min-width: 60px;
-  }
-
-  .nav-item span {
-    display: none;
-  }
-
-  .nav-item {
-    justify-content: center;
-    padding: 0.875rem 0;
-  }
-
-  .nav-item svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .sidebar-illustration {
     display: none;
   }
 
   .main {
     padding: 1.25rem 1rem;
+    padding-bottom: 80px;
   }
 
-  .stats-row {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-row {
     flex-direction: column;
   }
 
-  .stat-card {
-    min-width: unset;
-  }
-
-  .tickets-table th,
-  .tickets-table td {
-    padding: 0.625rem 0.75rem;
-    font-size: 0.8rem;
-  }
-}
-
-.bottom-nav {
-  display: none;
-}
-
-@media (max-width: 480px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main {
-    padding: 1rem;
-  }
-
-  .welcome-text {
-    font-size: 0.9rem;
-  }
-
-  .stat-count {
-    font-size: 1.5rem;
-  }
-
-  .tickets-table th:nth-child(3),
-  .tickets-table td:nth-child(3) {
-    display: none;
+  .btn-submit,
+  .btn-cancel {
+    width: 100%;
   }
 
   .bottom-nav {
@@ -512,9 +470,5 @@
 
   .bottom-nav-item.danger {
     color: #E05C00;
-  }
-
-  .main {
-    padding-bottom: 80px;
   }
 }

@@ -231,7 +231,7 @@
 
 .stats-row {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   flex-wrap: wrap;
   margin-bottom: 1.75rem;
 }
@@ -263,20 +263,20 @@
 }
 
 .stat-label {
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #14396A;
 }
 
 .stat-sub {
-  font-size: 0.7rem;
+  font-size: 0.875rem;
   color: rgba(20, 57, 106, 0.65);
   margin-top: 2px;
 }
 
 .stat-count {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #14396A;
 }
 
