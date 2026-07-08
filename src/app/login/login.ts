@@ -2,15 +2,20 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { HideShowComponent } from '../shared/hide-show/hide-show';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, HideShowComponent,],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css'],
 })
+
 export class Login {
+togglePassword() {
+throw new Error('Method not implemented.');
+}
   username = '';
   password = '';
   errorMsg = '';

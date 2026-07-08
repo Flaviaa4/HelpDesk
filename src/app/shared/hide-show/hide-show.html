@@ -1,0 +1,38 @@
+<div class="input-group">
+
+  <input
+    class="input-field"
+    [type]="showPassword ? 'text' : 'password'"
+    [value]="password"
+    [placeholder]="placeholder"
+    (input)="updatePassword($event)"
+  />
+
+  <button
+    type="button"
+    class="toggle-btn"
+    (click)="togglePassword()">
+
+    <svg
+      *ngIf="!showPassword"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="#14396A">
+
+      <path d="M12 5C6 5 2 12 2 12s4 7 10 7 10-7 10-7-4-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+
+    </svg>
+
+    <svg
+      *ngIf="showPassword"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="#14396A">
+
+      <path d="M3.27 2L2 3.27l4.05 4.05C4.19 8.66 2.84 10.28 2 12c1.73 3.54 5.36 7 10 7 2.08 0 3.97-.67 5.59-1.77L20.73 21 22 19.73 3.27 2zM12 16a4 4 0 0 1-4-4c0-.48.09-.93.24-1.35l5.11 5.11c-.42.15-.87.24-1.35.24zm4-4c0 .48-.09.93-.24 1.35l-5.11-5.11A3.97 3.97 0 0 1 12 8a4 4 0 0 1 4 4z"/>
+
+    </svg>
+
+  </button>
+
+</div>

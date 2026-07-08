@@ -222,6 +222,19 @@
   background: #F0F4F8;
 }
 
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #14396A;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.90rem;
+  color: #14396A;
+  margin-bottom: 1.5rem;
+}
+
 .top-bar {
   display: flex;
   align-items: center;
