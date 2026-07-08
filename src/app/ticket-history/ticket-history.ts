@@ -31,16 +31,15 @@ export class TicketHistory implements OnInit {
     this.profileOpen = false;
   }
 
-  logout() {
-    console.log('User logged out');
-  }
-
   ngOnInit() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  this.userName = user.name || 'User';
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userName = user.name || 'User';
 
-  this.loading = false;
-
-
-}
+    this.loading = false;
+  }
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
+  }
 }

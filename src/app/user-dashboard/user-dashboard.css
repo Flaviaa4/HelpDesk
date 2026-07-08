@@ -285,20 +285,20 @@
 }
 
 .stat-label {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #14396A;
 }
 
 .stat-sub {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: rgba(20, 57, 106, 0.65);
   margin-top: 2px;
 }
 
 .stat-count {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #14396A;
 }
 

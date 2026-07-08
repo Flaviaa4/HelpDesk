@@ -11,6 +11,7 @@ import { SettingsComponent } from './settings/settings';
 import { ProfileComponent } from './profile/profile';
 import { USettings } from './u-settings/u-settings';
 import { UProfile } from './u-profile/u-profile';
+import { ChatComponent } from './shared/chat/chat';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,5 +27,6 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'u-settings', component: USettings },
   { path: 'u-profile', component: UProfile },
+  { path: 'chat', component: ChatComponent },
 ];
 

@@ -25,10 +25,6 @@ export class USettings {
     this.profileOpen = false;
   }
 
-  logout() {
-    console.log('User logged out');
-  }
-
   savePreferences() {
     console.log('Notification preferences saved');
   }
@@ -43,5 +39,10 @@ export class USettings {
 
   resetSettings() {
     console.log('Settings reset');
+  }
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }
