@@ -3,36 +3,48 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { HideShowComponent } from '../shared/hide-show/hide-show';
+import { FirebaseService } from '../services/firebase';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HideShowComponent,],
+  imports: [CommonModule, FormsModule, RouterModule, HideShowComponent],
   templateUrl: './login.html',
-  styleUrls: ['./login.css'],
+  styleUrl: './login.css',
 })
-
 export class Login {
-togglePassword() {
-throw new Error('Method not implemented.');
-}
   username = '';
   password = '';
   errorMsg = '';
+  loading = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private firebase: FirebaseService,
+    private router: Router,
+  ) {}
 
-  login() {
+  async login() {
     if (!this.username || !this.password) {
       this.errorMsg = 'Please fill in all fields.';
       return;
     }
 
-    if (this.username === 'admin@helpdesk.com' && this.password === 'admin123') {
-      this.router.navigate(['/admin-dashboard']);
-    } else if (this.username === 'user@helpdesk.com' && this.password === 'user1234') {
-      this.router.navigate(['/user-dashboard']);
-    } else {
+    this.loading = true;
+    this.errorMsg = '';
+
+    try {
+      const user = await this.firebase.login(this.username, this.password);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      if (user['role'] === 'admin') {
+        this.router.navigate(['/admin-dashboard']);
+      } else if (user['role'] === 'technician') {
+        this.router.navigate(['/technician-dashboard']);
+      } else {
+        this.router.navigate(['/user-dashboard']);
+      }
+    } catch (err: any) {
+      this.loading = false;
       this.errorMsg = 'Invalid email or password.';
     }
   }

@@ -1,45 +1,84 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { ChatComponent } from "../shared/chat/chat";
+import { Subscription } from 'rxjs';
+import { ChatComponent } from '../shared/chat/chat';
+import { HeaderComponent } from '../shared/header/header';
+import { SidebarComponent } from '../shared/sidebar/sidebar';
+import { FirebaseService } from '../services/firebase';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, ChatComponent],
+  imports: [CommonModule, RouterModule, ChatComponent, HeaderComponent, SidebarComponent],
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.css',
 })
-export class UserDashboard implements OnInit {
-  profileOpen: any;
+export class UserDashboard implements OnInit, OnDestroy {
+  role = 'user';
   loading = true;
-  userName = '';
+  userName = 'User';
   recentTickets: any[] = [];
   openCount = 0;
   inProgressCount = 0;
   resolvedCount = 0;
+  loadError = '';
 
-  constructor(private router: Router) {}
+  private ticketsSub?: Subscription;
 
-  toggleProfile() {
-    this.profileOpen = !this.profileOpen;
-  }
-
-  @HostListener('document:click')
-  closeDropdown() {
-    this.profileOpen = false;
-  }
+  constructor(
+    private firebase: FirebaseService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.userName = user.name || 'User';
+    this.userName = user.role === this.role ? user.name : 'User';
 
-    this.loading = false;
+    if (!user.uid) {
+      this.loading = false;
+      return;
+    }
+
+    this.ticketsSub = this.firebase.getTicketsByUserRealtime(user.uid).subscribe({
+      next: (tickets) => {
+        this.openCount = tickets.filter((t) => t.status === 'open').length;
+        this.inProgressCount = tickets.filter((t) => t.status === 'in_progress').length;
+        this.resolvedCount = tickets.filter((t) => t.status === 'resolved').length;
+
+        this.recentTickets = [...tickets]
+          .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt))
+          .slice(0, 5)
+          .map((t) => ({
+            id: t.id,
+            description: t.description || t.title || '',
+            priority: t.priority || 'low',
+            status: t.status || 'open',
+          }));
+
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error streaming your tickets:', err);
+        this.loadError = `Failed to load tickets: ${err?.code || err?.message || 'unknown error'}`;
+        this.loading = false;
+      },
+    });
   }
+
+  ngOnDestroy() {
+    this.ticketsSub?.unsubscribe();
+  }
+
+  private timestampMillis(value: any): number {
+    if (value?.toMillis) return value.toMillis();
+    if (value?.seconds) return value.seconds * 1000;
+    return 0;
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 }
-

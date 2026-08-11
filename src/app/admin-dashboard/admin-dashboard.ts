@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { ChatComponent } from "../shared/chat/chat";
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ChatComponent],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
@@ -25,7 +24,7 @@ export class AdminDashboard {
 
   constructor(private router: Router) {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.userName = user.name || 'Admin';
+    this.userName = (user.role || '').toLowerCase().trim() === 'admin' ? user.name : 'Admin';
   }
 
   toggleProfile() {

@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { FirebaseService } from '../services/firebase';
 
 @Component({
   selector: 'app-profile',
@@ -9,14 +10,48 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './profile.html',
   styleUrls: ['./profile.css'],
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   profileOpen = false;
 
-  fullName = 'Admin User';
+  fullName = 'Admin';
   role = 'Administrator';
-  email = 'admin@helpdesk.com';
+  email = '';
+  department = '';
+  lastLogin = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private firebase: FirebaseService,
+    private router: Router,
+  ) {}
+
+  async ngOnInit() {
+    const stored = JSON.parse(localStorage.getItem('user') || '{}');
+    this.fullName = (stored.role || '').toLowerCase().trim() === 'admin' ? stored.name : 'Admin';
+    this.email = stored.email || '';
+
+    const authUser = this.firebase.getCurrentUser();
+    if (authUser?.metadata?.lastSignInTime) {
+      this.lastLogin = new Date(authUser.metadata.lastSignInTime).toLocaleString();
+    }
+
+    if (stored.uid) {
+      try {
+        const profile: any = await this.firebase.getUserByUid(stored.uid);
+        if (profile) {
+          this.fullName = profile.name || this.fullName;
+          this.email = profile.email || this.email;
+          this.role = profile.role ? this.capitalize(profile.role) : this.role;
+          this.department = profile.department || '';
+        }
+      } catch (err) {
+        console.error('Error loading profile:', err);
+      }
+    }
+  }
+
+  private capitalize(value: string) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;

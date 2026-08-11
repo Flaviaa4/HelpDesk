@@ -169,6 +169,22 @@
   transform: scale(0.98);
 }
 
+.signin-row {
+  text-align: center;
+  font-size: 0.83rem;
+  color: #9AA0AC;
+  margin-top: 1.5rem;
+}
+
+.signin-row a {
+  color: #14396A;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signin-row a:hover {
+  text-decoration: underline;
+}
 .error-msg {
   color: #E05C00;
   font-size: 0.82rem;

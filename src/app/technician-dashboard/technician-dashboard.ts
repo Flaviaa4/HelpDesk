@@ -1,26 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ChatComponent } from '../shared/chat/chat';
 import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
 
 @Component({
-  selector: 'app-ticket-history',
+  selector: 'app-technician-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent],
-  templateUrl: './ticket-history.html',
-  styleUrl: './ticket-history.css',
+  imports: [CommonModule, RouterModule, ChatComponent, HeaderComponent, SidebarComponent],
+  templateUrl: './technician-dashboard.html',
+  styleUrl: './technician-dashboard.css',
 })
-export class TicketHistory implements OnInit, OnDestroy {
-  role = 'user';
-  userName = 'User';
-
-  searchTerm = '';
-  tickets: any[] = [];
+export class TechnicianDashboard implements OnInit, OnDestroy {
+  role = 'technician';
   loading = true;
+  userName = 'Technician';
+  recentTickets: any[] = [];
+  assignedCount = 0;
+  inProgressCount = 0;
+  resolvedCount = 0;
   loadError = '';
 
   private ticketsSub?: Subscription;
@@ -32,29 +33,33 @@ export class TicketHistory implements OnInit, OnDestroy {
 
   ngOnInit() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.userName = user.role === this.role ? user.name : 'User';
+    this.userName = user.role === this.role ? user.name : 'Technician';
 
     if (!user.uid) {
       this.loading = false;
       return;
     }
 
-    this.ticketsSub = this.firebase.getTicketsByUserRealtime(user.uid).subscribe({
-      next: (raw) => {
-        this.tickets = [...raw]
+    this.ticketsSub = this.firebase.getTicketsByTechnicianRealtime(user.uid).subscribe({
+      next: (tickets) => {
+        this.assignedCount = tickets.filter((t) => t.status === 'open').length;
+        this.inProgressCount = tickets.filter((t) => t.status === 'in_progress').length;
+        this.resolvedCount = tickets.filter((t) => t.status === 'resolved').length;
+
+        this.recentTickets = [...tickets]
           .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt))
+          .slice(0, 5)
           .map((t) => ({
             id: t.id,
-            title: t.title || '',
-            category: t.category || '--',
+            description: t.description || t.title || '',
             priority: t.priority || 'low',
             status: t.status || 'open',
-            createdOn: t.createdOn || this.formatTimestamp(t.createdAt),
           }));
+
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error streaming your tickets:', err);
+        console.error('Error streaming assigned tickets:', err);
         this.loadError = `Failed to load tickets: ${err?.code || err?.message || 'unknown error'}`;
         this.loading = false;
       },
@@ -65,23 +70,10 @@ export class TicketHistory implements OnInit, OnDestroy {
     this.ticketsSub?.unsubscribe();
   }
 
-  get filteredTickets() {
-    const term = this.searchTerm.toLowerCase().trim();
-    if (!term) return this.tickets;
-    return this.tickets.filter(
-      (t) => t.title.toLowerCase().includes(term) || t.category.toLowerCase().includes(term),
-    );
-  }
-
   private timestampMillis(value: any): number {
     if (value?.toMillis) return value.toMillis();
     if (value?.seconds) return value.seconds * 1000;
     return 0;
-  }
-
-  private formatTimestamp(value: any): string {
-    const millis = this.timestampMillis(value);
-    return millis ? new Date(millis).toISOString().split('T')[0] : '';
   }
 
   logout() {

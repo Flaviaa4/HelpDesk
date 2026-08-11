@@ -1,0 +1,109 @@
+<div class="page-wrap">
+  <app-header [userName]="userName" [role]="role" (logout)="logout()"></app-header>
+
+  <div class="page-body">
+
+    <app-sidebar [role]="role"></app-sidebar>
+
+    <div class="content">
+
+      <div class="page-header">
+        <h1>Settings</h1>
+        <p>Manage your notifications and system preferences.</p>
+      </div>
+
+      <div class="top-row">
+
+        <div class="settings-card">
+
+          <h2>Notifications</h2>
+
+          <div class="setting-row">
+            <span>Email Notifications</span>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="emailNotifications" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <span>New Ticket Alerts</span>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="newTicketAlerts" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <span>Ticket Status Updates</span>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="ticketStatusUpdates" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <span>System Alerts</span>
+            <label class="switch">
+              <input type="checkbox" [(ngModel)]="systemAlerts" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <button class="primary-btn" (click)="savePreferences()">
+            Save Preferences
+          </button>
+
+        </div>
+
+        <div class="settings-card">
+
+          <h2>System Preferences</h2>
+
+          <div class="form-group">
+            <label>Language</label>
+            <select [(ngModel)]="language">
+              <option>English</option>
+              <option>French</option>
+              <option>Kinyarwanda</option>
+              <option>Swahili</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Timezone</label>
+            <select [(ngModel)]="timezone">
+              <option>Africa/Kigali</option>
+              <option>Africa/Nairobi</option>
+              <option>Europe/London</option>
+              <option>America/New_York</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Date Format</label>
+            <select [(ngModel)]="dateFormat">
+              <option>DD-MM-YYYY</option>
+              <option>MM-DD-YYYY</option>
+              <option>YYYY-MM-DD</option>
+            </select>
+          </div>
+
+          <div class="btn-row">
+            <button class="primary-btn" (click)="saveSystemSettings()">
+              Save System Settings
+            </button>
+            <button class="secondary-btn" (click)="resetSettings()">
+              Reset to Default
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

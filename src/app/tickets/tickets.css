@@ -367,12 +367,23 @@
   background: #3D9B3D;
 }
 
-.badge-inprogress {
+.badge-inprogress,
+.badge-in_progress {
   background: #F5A623;
 }
 
 .badge-pending {
   background: #9AA0AC;
+}
+
+.badge-unassigned {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9AA0AC;
+  background: #F0F2F5;
 }
 
 .action-btns {
@@ -412,6 +423,116 @@
 
 .btn-delete:hover {
   background: #cc4400;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 8px 32px rgba(20, 57, 106, 0.15);
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #14396A;
+  margin-bottom: 0.25rem;
+}
+
+.modal-subtitle {
+  font-size: 0.85rem;
+  color: #9AA0AC;
+  margin-bottom: 1.25rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #14396A;
+  margin-bottom: 0.4rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #14396A;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  border-color: #14396A;
+}
+
+.modal-btns {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.btn-save {
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background: #1a4f96;
+}
+
+.btn-cancel {
+  background: #fff;
+  color: #14396A;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-cancel:hover {
+  background: #F0F4F8;
+}
+
+.error-msg {
+  color: #E05C00;
+  font-size: 0.82rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-msg {
+  color: #3D9B3D;
+  font-size: 0.82rem;
+  margin-bottom: 0.5rem;
 }
 
 .bottom-nav {
@@ -519,4 +640,14 @@
   .bottom-nav-item.danger {
     color: rgba(255, 100, 100, 0.8);
   }
+}
+
+.load-error {
+  background: #FFF3EE;
+  color: #E05C00;
+  border: 1px solid #F5C6A5;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
 }

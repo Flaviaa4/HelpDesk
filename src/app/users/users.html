@@ -1,48 +1,51 @@
 <div class="page-wrap">
-<div class="header">
-  <div class="header-logo">
-    <img src="admin-logo.png" alt="IT HelpDesk" />
-  </div>
 
-  <div class="header-profile" (click)="toggleProfile()">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="admin-logo.png" alt="IT HelpDesk" />
+    </div>
+
+    <div class="header-profile" (click)="toggleProfile()">
       <div class="avatar-circle">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
           <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
         </svg>
       </div>
 
-    <svg class="header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7 10l5 5 5-5z"/>
-    </svg>
+      <svg class="header-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
 
-    <div class="profile-dropdown" *ngIf="profileOpen" (click)="$event.stopPropagation()">
-      <div class="profile-dropdown-header">
-        <div class="profile-dropdown-name">{{ userName }}</div>
+      <div class="profile-dropdown" *ngIf="profileOpen" (click)="$event.stopPropagation()">
+        <div class="profile-dropdown-header">
+          <div class="profile-dropdown-name">{{ adminName }}</div>
+        </div>
+        <a class="dropdown-item" routerLink="/profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+          </svg>
+          Profile
+        </a>
+        <a class="dropdown-item" routerLink="/settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+          </svg>
+          Settings
+        </a>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item danger" (click)="logout()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+          </svg>
+          Sign out
+        </button>
       </div>
-      <a class="dropdown-item" routerLink="/profile">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="ffffff">
-          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-        </svg>
-        Profile
-      </a>
-      <a class="dropdown-item" routerLink="/settings">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="ffffff">
-          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-        </svg>
-        Settings
-      </a>
-      <div class="dropdown-divider"></div>
-      <button class="dropdown-item danger" (click)="logout()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#E05C00">
-          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-        </svg>
-        Sign out
-      </button>
     </div>
   </div>
-</div>
 
   <div class="page-body">
+
     <div class="sidebar">
       <a class="nav-item" routerLink="/admin-dashboard">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -50,14 +53,12 @@
         </svg>
         Dashboard
       </a>
-
       <a class="nav-item" routerLink="/tickets">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/>
         </svg>
         Tickets
       </a>
-
       <a class="nav-item active" routerLink="/users">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
           <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
@@ -67,8 +68,7 @@
     </div>
 
     <div class="main">
-      <div class="page-title">Users Page</div>
-      <div class="page-subtitle">View and manage users</div>
+
 
       <div class="top-bar">
         <div class="search-input-wrap">
@@ -83,70 +83,62 @@
           </svg>
         </div>
 
-        <div class="menu-wrap">
-          <button class="btn-dots" (click)="toggleMenu()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
-          </button>
-
-          <div class="dropdown-menu" *ngIf="menuOpen">
-            <button class="dropdown-item">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-              </svg>
-              Edit Selected User
-            </button>
-            <button class="dropdown-item">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-              </svg>
-              Deactivate User
-            </button>
-            <div class="dropdown-divider"></div>
-            <button class="dropdown-item danger">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-              </svg>
-              Delete User
-            </button>
-          </div>
-        </div>
+        <select class="filter-select" [(ngModel)]="selectedRole">
+          <option value="all">All Roles</option>
+          <option value="user">User</option>
+          <option value="technician">Technician</option>
+        </select>
       </div>
 
       <div class="table-card">
         <table class="users-table">
           <thead>
             <tr>
-              <th style="width:40px;"></th>
-              <th>Names</th>
-              <th>Position</th>
-              <th>Status</th>
+              <th></th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="users.length === 0">
-              <td colspan="4" class="empty-state">
-                No users found.
-              </td>
+            <tr *ngIf="loading">
+              <td colspan="6" class="empty-state">Loading users...</td>
             </tr>
-            <tr *ngFor="let user of users">
-              <td><input type="checkbox" /></td>
+            <tr *ngIf="!loading && users.length === 0">
+              <td colspan="6" class="empty-state">No users found.</td>
+            </tr>
+            <tr *ngIf="!loading && users.length > 0 && filteredUsers.length === 0">
+              <td colspan="6" class="empty-state">No users match your filters.</td>
+            </tr>
+            <tr *ngFor="let user of filteredUsers">
               <td>
-                <div class="user-cell">
-                  <div class="user-avatar">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-                    </svg>
-                  </div>
-                  {{ user.name }}
+                <div class="user-avatar">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                  </svg>
                 </div>
               </td>
-              <td>{{ user.position }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
               <td>
-                <div class="status-dot">
-                  <span class="dot" [ngClass]="user.status === 'Active' ? 'dot-active' : 'dot-offline'"></span>
-                  {{ user.status }}
+                <span class="role-badge" [ngClass]="'role-' + user.role">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>{{ user.department || '--' }}</td>
+              <td>
+                <div class="action-btns">
+                  <button
+                    class="btn-assign"
+                    *ngIf="user.role === 'technician'"
+                    (click)="openAssignDept(user)">
+                    Assign Dept
+                  </button>
+                  <button class="btn-delete" (click)="deleteUser(user.id)">
+                    Delete
+                  </button>
                 </div>
               </td>
             </tr>
@@ -154,40 +146,60 @@
         </table>
       </div>
 
+      <div class="modal-overlay" *ngIf="editingUser" (click)="closeAssignDept()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+          <div class="modal-title">Assign </div>
+          <div class="modal-subtitle">{{ editingUser.name }}</div>
+
+          <div class="form-group">
+            <label class="form-label">Department</label>
+            <select class="form-control" [(ngModel)]="selectedDepartment">
+              <option value="">Select department</option>
+              <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+            </select>
+          </div>
+
+          <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+          <div class="success-msg" *ngIf="successMsg">{{ successMsg }}</div>
+
+          <div class="modal-btns">
+            <button class="btn-save" (click)="saveDepartment()">Save</button>
+            <button class="btn-cancel" (click)="closeAssignDept()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
       <div class="pagination">
-        <button class="btn-page">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-          </svg>
-        </button>
-        <button class="btn-page">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-          </svg>
-        </button>
-        <span>{{ users.length }} total</span>
+        <span>{{ filteredUsers.length }} of {{ users.length }} users</span>
       </div>
 
     </div>
   </div>
-<div class="bottom-nav">
-  <a class="bottom-nav-item" routerLink="/admin-dashboard">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-    </svg>
-    Dashboard
-  </a>
-  <a class="bottom-nav-item" routerLink="/tickets">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/>
-    </svg>
-    Tickets
-  </a>
-  <a class="bottom-nav-item" routerLink="/users">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-    </svg>
-    Users
-  </a>
-</div>
+  <div class="bottom-nav">
+    <a class="bottom-nav-item active" routerLink="/admin-dashboard">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+      </svg>
+      Dashboard
+    </a>
+    <a class="bottom-nav-item" routerLink="/tickets">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/>
+      </svg>
+      Tickets
+    </a>
+    <a class="bottom-nav-item" routerLink="/users">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+      </svg>
+      Users
+    </a>
+    <button class="bottom-nav-item danger" (click)="logout()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+      </svg>
+      Logout
+    </button>
+  </div>
+
 </div>

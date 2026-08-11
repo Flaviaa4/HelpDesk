@@ -135,23 +135,13 @@
             </div>
 
             <div>
-              <label>Phone Number</label>
-              <p>+250 788 123 456</p>
-            </div>
-
-            <div>
               <label>Role</label>
               <p>{{ role }}</p>
             </div>
 
             <div>
               <label>Department</label>
-              <p>Software Engineering</p>
-            </div>
-
-            <div>
-              <label>Employee ID</label>
-              <p>HD-001</p>
+              <p>{{ department || '--' }}</p>
             </div>
 
           </div>
@@ -166,33 +156,7 @@
 
             <label>Last Login</label>
 
-            <p>Today 09:15 AM</p>
-
-          </div>
-
-          <div class="security-item">
-
-            <label>Account Status</label>
-
-            <span class="status-active">
-              Active
-            </span>
-
-          </div>
-
-          <div class="security-item">
-
-            <label>Two-Factor Authentication</label>
-
-            <p>Disabled</p>
-
-          </div>
-
-          <div class="security-item">
-
-            <label>Password Last Changed</label>
-
-            <p>14 Days Ago</p>
+            <p>{{ lastLogin || '--' }}</p>
 
           </div>
 

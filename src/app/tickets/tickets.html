@@ -72,6 +72,8 @@
       <div class="page-title">Tickets Page</div>
       <div class="page-subtitle">View and manage tickets.</div>
 
+      <div class="load-error" *ngIf="loadError">{{ loadError }}</div>
+
       <div class="search-bar">
         <div class="search-input-wrap">
           <input
@@ -96,7 +98,7 @@
         <select class="filter-select" [(ngModel)]="selectedStatus">
           <option value="">All Statuses</option>
           <option value="open">Open</option>
-          <option value="inprogress">In Progress</option>
+          <option value="in_progress">In Progress</option>
           <option value="resolved">Resolved</option>
         </select>
       </div>
@@ -108,32 +110,70 @@
               <th>Ticket ID</th>
               <th>Subject</th>
               <th>User</th>
+              <th>Technician</th>
               <th>Priority</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="tickets.length === 0">
-              <td colspan="6" style="text-align:center; padding:2rem; color:#9AA0AC;">
+            <tr *ngIf="loading">
+              <td colspan="7" style="text-align:center; padding:2rem; color:#9AA0AC;">
+                Loading tickets...
+              </td>
+            </tr>
+            <tr *ngIf="!loading && tickets.length === 0">
+              <td colspan="7" style="text-align:center; padding:2rem; color:#9AA0AC;">
                 No tickets submitted yet.
               </td>
             </tr>
-            <tr *ngFor="let ticket of tickets">
+            <tr *ngIf="!loading && tickets.length > 0 && filteredTickets.length === 0">
+              <td colspan="7" style="text-align:center; padding:2rem; color:#9AA0AC;">
+                No tickets match your filters.
+              </td>
+            </tr>
+            <tr *ngFor="let ticket of filteredTickets">
               <td>{{ ticket.id }}</td>
               <td>{{ ticket.subject }}</td>
               <td>{{ ticket.user }}</td>
+              <td>
+                <span *ngIf="ticket.technicianName">{{ ticket.technicianName }}</span>
+                <span class="badge-unassigned" *ngIf="!ticket.technicianName">Unassigned</span>
+              </td>
               <td><span class="badge" [ngClass]="'badge-' + ticket.priority.toLowerCase()">{{ ticket.priority }}</span></td>
               <td><span class="badge" [ngClass]="'badge-' + ticket.status.toLowerCase()">{{ ticket.status }}</span></td>
               <td>
                 <div class="action-btns">
-                  <button class="btn-view">View</button>
-                  <button class="btn-delete">Delete</button>
+                  <button class="btn-view" (click)="openAssign(ticket)">Assign</button>
+                  <button class="btn-delete" (click)="deleteTicket(ticket.id)">Delete</button>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="modal-overlay" *ngIf="assigningTicket" (click)="closeAssign()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+          <div class="modal-title">Assign Technician</div>
+          <div class="modal-subtitle">{{ assigningTicket.subject }}</div>
+
+          <div class="form-group">
+            <label class="form-label">Technician</label>
+            <select class="form-control" [(ngModel)]="selectedTechnicianId">
+              <option value="">Select technician</option>
+              <option *ngFor="let tech of technicians" [value]="tech.uid">{{ tech.name }}</option>
+            </select>
+          </div>
+
+          <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
+          <div class="success-msg" *ngIf="successMsg">{{ successMsg }}</div>
+
+          <div class="modal-btns">
+            <button class="btn-save" (click)="saveAssignment()">Save</button>
+            <button class="btn-cancel" (click)="closeAssign()">Cancel</button>
+          </div>
+        </div>
       </div>
 
     </div>

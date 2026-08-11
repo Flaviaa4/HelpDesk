@@ -24,24 +24,6 @@
   z-index: 100;
 }
 
-.header-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header-user svg {
-  width: 25px;
-  height: 25px;
-  flex-shrink: 0;
-}
-
-.header-username {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #14396A;
-}
-
 .header-profile {
   position: relative;
   display: flex;
@@ -281,6 +263,23 @@
   color: #9AA0AC;
 }
 
+.filter-select {
+  padding: 0.65rem 2rem 0.65rem 0.875rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #14396A;
+  background: #fff;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.filter-select:focus {
+  border-color: #14396A;
+}
+
 .menu-wrap {
   position: relative;
 }
@@ -513,7 +512,7 @@
     flex-direction: column;
   }
 
-  .search-bar {
+  .top-bar {
     flex-direction: column;
     align-items: stretch;
   }
@@ -587,4 +586,155 @@
   .bottom-nav-item.danger {
     color: rgba(255, 100, 100, 0.8);
   }
+}
+.role-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.role-user {
+  background: #C8D8ED;
+  color: #14396A;
+}
+
+.role-technician {
+  background: #F5C97A;
+  color: #7A5000;
+}
+
+.role-admin {
+  background: #7DC87D;
+  color: #1A5C1A;
+}
+
+.btn-assign {
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+  margin-right: 0.5rem;
+}
+
+.btn-assign:hover {
+  background: #1a4f96;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 8px 32px rgba(20, 57, 106, 0.15);
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #14396A;
+  margin-bottom: 0.25rem;
+}
+
+.modal-subtitle {
+  font-size: 0.85rem;
+  color: #9AA0AC;
+  margin-bottom: 1.25rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #14396A;
+  margin-bottom: 0.4rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #14396A;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  border-color: #14396A;
+}
+
+.modal-btns {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.btn-save {
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background: #1a4f96;
+}
+
+.btn-cancel {
+  background: #fff;
+  color: #14396A;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-cancel:hover {
+  background: #F0F4F8;
+}
+
+.error-msg {
+  color: #E05C00;
+  font-size: 0.82rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-msg {
+  color: #3D9B3D;
+  font-size: 0.82rem;
+  margin-bottom: 0.5rem;
 }

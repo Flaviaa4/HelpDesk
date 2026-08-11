@@ -13,14 +13,12 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* ── BODY ── */
 .page-body {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* ── MAIN ── */
 .main {
   flex: 1;
   padding: 2rem 2.5rem;
@@ -86,7 +84,7 @@
   color: #9AA0AC;
 }
 
-.priority-select {
+.filter-select {
   padding: 0.65rem 2rem 0.65rem 0.875rem;
   border: 1px solid #D5DCE8;
   border-radius: 6px;
@@ -98,25 +96,8 @@
   cursor: pointer;
 }
 
-.priority-select:focus {
+.filter-select:focus {
   border-color: #14396A;
-}
-
-.btn-search {
-  background: #14396A;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 0.65rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s;
-}
-
-.btn-search:hover {
-  background: #1a4f96;
 }
 
 .table-card {
@@ -189,6 +170,110 @@
   background: #F5A623;
 }
 
+.empty-cell {
+  text-align: center;
+  padding: 2rem;
+  color: #9AA0AC;
+}
+
+.action-cell {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  background: #fff;
+  color: #14396A;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.action-btn:hover {
+  background: #F0F4F8;
+}
+
+.status-editor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-editor select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  color: #14396A;
+}
+
+.confirm-btn {
+  background: #3D9B3D;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.confirm-btn:hover {
+  background: #2f7d2f;
+}
+
+.note-row td {
+  background: #F8F9FB;
+  padding: 0.75rem 1.25rem;
+}
+
+.note-input-wrap {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.note-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #D5DCE8;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #14396A;
+  font-family: inherit;
+  outline: none;
+}
+
+.note-input:focus {
+  border-color: #14396A;
+}
+
+.send-btn {
+  background: #14396A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.send-btn:hover {
+  background: #1a4f96;
+}
+
 .bottom-nav {
   display: none;
 }
@@ -212,11 +297,7 @@
     max-width: 50%;
   }
 
-  .priority-select {
-    width: 100%;
-  }
-
-  .btn-search {
+  .filter-select {
     width: 100%;
   }
 
@@ -225,7 +306,7 @@
   }
 
   .tickets-table {
-    min-width: 400px;
+    min-width: 700px;
   }
 
   .tickets-table th,
