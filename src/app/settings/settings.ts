@@ -40,6 +40,7 @@ export class SettingsComponent {
   resetSettings() {
     console.log('Settings reset to default');
   }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

@@ -40,6 +40,7 @@ export class USettings {
   resetSettings() {
     console.log('Settings reset');
   }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

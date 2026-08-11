@@ -14,6 +14,7 @@ import { FirebaseService } from '../services/firebase';
 })
 export class Signup {
   userName = '';
+  username = '';
   email = '';
   password = '';
   errorMsg = '';
@@ -27,6 +28,16 @@ export class Signup {
 
   async register() {
     if (!this.userName || !this.email || !this.password) {
+  showPassword = false;
+
+  constructor(private router: Router) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  register() {
+    if (!this.username || !this.email || !this.password) {
       this.errorMsg = 'Please fill in all fields.';
       return;
     }

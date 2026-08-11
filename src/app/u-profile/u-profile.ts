@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FirebaseService } from '../services/firebase';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-u-profile',
@@ -52,6 +53,8 @@ export class UProfile implements OnInit {
   private capitalize(value: string) {
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
+
+  constructor(private router: Router) {}
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;

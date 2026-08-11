@@ -88,6 +88,9 @@ export class SubmitTicket implements OnInit {
 
     if (!this.userId) {
       this.errorMsg = 'You must be logged in to submit a ticket.';
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.id) {
+      this.errorMsg = 'Connection issues, try angain later.';
       return;
     }
 

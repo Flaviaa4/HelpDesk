@@ -24,6 +24,15 @@ export class Login {
   ) {}
 
   async login() {
+  showPassword = false;
+
+  constructor(private router: Router) {}
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  login() {
     if (!this.username || !this.password) {
       this.errorMsg = 'Please fill in all fields.';
       return;
@@ -49,3 +58,4 @@ export class Login {
     }
   }
 }
+

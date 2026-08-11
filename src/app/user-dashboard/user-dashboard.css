@@ -13,6 +13,144 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+.header {
+  flex-shrink: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #E2E5EC;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 2rem;
+  box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
+  z-index: 100;
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #E8EDF5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-circle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.header-username {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #14396A;
+}
+.header-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.header-profile:hover {
+  background: #F0F4F8;
+}
+
+.header-profile>svg {
+  width: 20px;
+  height: 20px;
+}
+
+.header-chevron {
+  width: 16px !important;
+  height: 16px !important;
+  color: #9AA0AC;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #E2E5EC;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(20, 57, 106, 0.12);
+  min-width: 180px;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.profile-dropdown-header {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #E2E5EC;
+  background: #F8F9FB;
+}
+
+.profile-dropdown-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #14396A;
+}
+
+.profile-dropdown-role {
+  font-size: 0.75rem;
+  color: #9AA0AC;
+  margin-top: 2px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #3D4452;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background: #F0F4F8;
+  color: #14396A;
+}
+
+.dropdown-item.danger {
+  color: #E05C00;
+}
+
+.dropdown-item.danger:hover {
+  background: #FFF3EE;
+}
+
+.dropdown-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #E2E5EC;
+}
+
+.header-logo img {
+  height: 3rem;
+  width: auto;
+  padding-left: -0.5rem;
+}
+
 .dashboard-body {
   display: flex;
   flex: 1;
@@ -36,7 +174,7 @@
 }
 
 .welcome-text {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #14396A;
   margin-bottom: 1rem;
@@ -73,11 +211,13 @@
 .stat-label {
   font-size: 1rem;
   font-weight: 600;
+  font-weight: 500;
   color: #14396A;
 }
 
 .stat-sub {
   font-size: 0.9rem;
+  font-size: 0.875rem;
   color: rgba(20, 57, 106, 0.65);
   margin-top: 2px;
 }
@@ -97,7 +237,7 @@
 }
 
 .tickets-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #14396A;
   margin-bottom: 1.25rem;
@@ -181,46 +321,43 @@
   background: #1a4f96;
 }
 
-@media (max-width: 768px) {
-  .main {
-    padding: 1.25rem 1rem;
-  }
-
-  .stats-row {
-    flex-direction: column;
-  }
-
-  .stat-card {
-    min-width: unset;
-  }
-
-  .tickets-table th,
-  .tickets-table td {
-    padding: 0.625rem 0.75rem;
-    font-size: 0.8rem;
-  }
-}
-
 .bottom-nav {
   display: none;
 }
 
-@media (max-width: 480px) {
-  .main {
-    padding: 1rem;
+@media (max-width: 768px) {
+  .header {
+    padding: 0.75rem 1rem;
   }
 
-  .welcome-text {
-    font-size: 0.9rem;
+  .header-logo img {
+    height: 36px;
   }
 
-  .stat-count {
-    font-size: 1.5rem;
+  .page-body {
+    flex-direction: column;
   }
 
-  .tickets-table th:nth-child(3),
-  .tickets-table td:nth-child(3) {
+  .sidebar {
     display: none;
+  }
+
+  .main {
+    padding: 1.25rem 1rem;
+    padding-bottom: 80px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
+
+  .btn-submit,
+  .btn-cancel {
+    width: 100%;
   }
 
   .bottom-nav {
@@ -270,10 +407,6 @@
 
   .bottom-nav-item.danger {
     color: #E05C00;
-  }
-
-  .main {
-    padding-bottom: 80px;
   }
 }
 

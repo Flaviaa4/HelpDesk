@@ -18,6 +18,7 @@ export class ChatComponent {
     {
       sender: 'admin',
       text: 'Welcome to HelpDesk Support!',
+      text: 'Hello! Welcome to HelpDesk Support.',
     },
   ];
 
@@ -27,6 +28,9 @@ export class ChatComponent {
 
   sendMessage() {
     if (!this.newMessage.trim()) return;
+    if (!this.newMessage.trim()) {
+      return;
+    }
 
     this.messages.push({
       sender: 'user',
@@ -39,6 +43,7 @@ export class ChatComponent {
       this.messages.push({
         sender: 'admin',
         text: 'Thank you. A support agent will assist you shortly.',
+        text: 'Thank you. Our support team will respond shortly.',
       });
     }, 1000);
   }

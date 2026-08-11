@@ -6,11 +6,13 @@ import { ChatComponent } from '../shared/chat/chat';
 import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
+import { ChatComponent } from '../shared/chat/chat';
 
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule, ChatComponent, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterModule, ChatComponent],
   templateUrl: './user-dashboard.html',
   styleUrl: './user-dashboard.css',
 })
@@ -66,14 +68,14 @@ export class UserDashboard implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.ticketsSub?.unsubscribe();
-  }
+  ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userName = user.name || 'User';
 
-  private timestampMillis(value: any): number {
-    if (value?.toMillis) return value.toMillis();
-    if (value?.seconds) return value.seconds * 1000;
-    return 0;
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 
   logout() {

@@ -4,6 +4,8 @@
   right: 25px;
   width: 65px;
   height: 65px;
+  width: 60px;
+  height: 60px;
   border: none;
   border-radius: 50%;
   background: #14396A;
@@ -24,6 +26,10 @@
 .chat-btn svg {
   width: 30px;
   height: 30px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  z-index: 999;
 }
 
 .chat-window {
@@ -73,6 +79,8 @@
 
 .admin {
   background: #e5e7eb;
+  background: #ffffff;
+  color: #14396A;
 }
 
 .user {
@@ -102,4 +110,31 @@
   border-radius: 8px;
   padding: 10px 15px;
   cursor: pointer;
+}
+.chat-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: #14396A;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(20, 57, 106, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: all 0.2s ease;
+}
+
+.chat-btn:hover {
+  transform: translateY(-3px);
+}
+
+.chat-btn svg {
+  width: 20px;
+  height: 20px;
 }

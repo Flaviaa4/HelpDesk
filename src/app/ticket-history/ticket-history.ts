@@ -17,7 +17,6 @@ import { FirebaseService } from '../services/firebase';
 export class TicketHistory implements OnInit, OnDestroy {
   role = 'user';
   userName = 'User';
-
   searchTerm = '';
   tickets: any[] = [];
   loading = true;
@@ -82,6 +81,11 @@ export class TicketHistory implements OnInit, OnDestroy {
   private formatTimestamp(value: any): string {
     const millis = this.timestampMillis(value);
     return millis ? new Date(millis).toISOString().split('T')[0] : '';
+  ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userName = user.name || 'User';
+
+    this.loading = false;
   }
 
   logout() {
@@ -90,3 +94,4 @@ export class TicketHistory implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 }
+
