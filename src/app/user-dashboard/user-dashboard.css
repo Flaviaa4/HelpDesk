@@ -36,7 +36,7 @@
 }
 
 .welcome-text {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #14396A;
   margin-bottom: 1rem;
@@ -97,7 +97,7 @@
 }
 
 .tickets-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #14396A;
   margin-bottom: 1.25rem;
@@ -181,12 +181,21 @@
   background: #1a4f96;
 }
 
+.bottom-nav {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .main {
     padding: 1.25rem 1rem;
+    padding-bottom: 80px;
   }
 
-  .stats-row {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-row {
     flex-direction: column;
   }
 
@@ -270,10 +279,6 @@
 
   .bottom-nav-item.danger {
     color: #E05C00;
-  }
-
-  .main {
-    padding-bottom: 80px;
   }
 }
 

@@ -17,7 +17,6 @@ import { FirebaseService } from '../services/firebase';
 export class TicketHistory implements OnInit, OnDestroy {
   role = 'user';
   userName = 'User';
-
   searchTerm = '';
   tickets: any[] = [];
   loading = true;
@@ -90,3 +89,4 @@ export class TicketHistory implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 }
+
