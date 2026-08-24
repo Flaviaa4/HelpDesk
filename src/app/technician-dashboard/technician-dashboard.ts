@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ChatComponent } from '../shared/chat/chat';
 import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
@@ -10,7 +9,7 @@ import { FirebaseService } from '../services/firebase';
 @Component({
   selector: 'app-technician-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, ChatComponent, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterModule, HeaderComponent, SidebarComponent],
   templateUrl: './technician-dashboard.html',
   styleUrl: './technician-dashboard.css',
 })
@@ -51,7 +50,8 @@ export class TechnicianDashboard implements OnInit, OnDestroy {
           .slice(0, 5)
           .map((t) => ({
             id: t.id,
-            description: t.description || t.title || '',
+            title: t.title || '',
+            user: t.userName || 'Unknown',
             priority: t.priority || 'low',
             status: t.status || 'open',
           }));

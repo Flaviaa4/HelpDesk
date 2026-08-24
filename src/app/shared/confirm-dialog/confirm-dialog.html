@@ -1,0 +1,11 @@
+<div class="modal-overlay" *ngIf="open" (click)="onCancel()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-title">{{ title }}</div>
+    <div class="modal-message">{{ message }}</div>
+
+    <div class="modal-btns">
+      <button class="btn-confirm-danger" (click)="onConfirm()">{{ confirmLabel }}</button>
+      <button class="btn-cancel" (click)="onCancel()">{{ cancelLabel }}</button>
+    </div>
+  </div>
+</div>

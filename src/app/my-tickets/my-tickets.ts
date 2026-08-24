@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
+import { PaginationComponent } from '../shared/pagination/pagination';
 
 const STATUS_LABELS: Record<string, string> = {
   open: 'Open',
@@ -22,7 +23,7 @@ const STATUS_VALUES: Record<string, string> = {
 @Component({
   selector: 'app-my-tickets',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent, PaginationComponent],
   templateUrl: './my-tickets.html',
   styleUrl: './my-tickets.css',
 })
@@ -33,6 +34,9 @@ export class MyTickets implements OnInit, OnDestroy {
   searchTerm = '';
   selectedStatus = 'All';
   selectedPriority = 'All';
+
+  currentPage = 1;
+  pageSize = 10;
 
   statusOptions = ['Open', 'In Progress', 'Resolved'];
 
@@ -80,8 +84,10 @@ export class MyTickets implements OnInit, OnDestroy {
         const prev = previousById.get(t.id);
         return {
           id: t.id,
+          ticketNumber: t.ticketNumber || null,
           user: t.userName || 'Unknown',
           title: t.title || '',
+          description: t.description || '',
           department: t.department || '--',
           priority: t.priority || 'low',
           status: STATUS_LABELS[t.status] || t.status || 'Open',
@@ -91,7 +97,11 @@ export class MyTickets implements OnInit, OnDestroy {
           pendingStatus: prev?.pendingStatus,
           addingNote: prev?.addingNote || false,
           noteDraft: prev?.noteDraft || '',
-          notes: prev?.notes || [],
+          noteFile: prev?.noteFile || null,
+          noteFileError: prev?.noteFileError || '',
+          sendingNote: prev?.sendingNote || false,
+          notes: t.notes || [],
+          unread: !!t.unreadForTechnician,
         };
       })
       .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt));
@@ -121,6 +131,15 @@ export class MyTickets implements OnInit, OnDestroy {
     });
   }
 
+  get pagedTickets() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredTickets.slice(start, start + this.pageSize);
+  }
+
+  resetPage() {
+    this.currentPage = 1;
+  }
+
   toggleStatusEditor(ticket: any) {
     ticket.addingNote = false;
     ticket.editingStatus = !ticket.editingStatus;
@@ -147,13 +166,56 @@ export class MyTickets implements OnInit, OnDestroy {
     if (ticket.addingNote && ticket.noteDraft === undefined) {
       ticket.noteDraft = '';
     }
+    if (ticket.addingNote && ticket.unread) {
+      ticket.unread = false;
+      this.firebase.markTicketNotesRead(ticket.id, 'unreadForTechnician').catch((err) => {
+        console.error('Error marking notes read:', err);
+      });
+    }
   }
 
-  sendNote(ticket: any) {
-    if (!ticket.noteDraft || !ticket.noteDraft.trim()) return;
-    (ticket.notes ||= []).push(ticket.noteDraft.trim());
-    ticket.noteDraft = '';
-    ticket.addingNote = false;
+  onFileSelected(ticket: any, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] || null;
+    ticket.noteFileError = '';
+    if (file && file.size > 10 * 1024 * 1024) {
+      ticket.noteFileError = 'File is too large (max 10MB).';
+      ticket.noteFile = null;
+      input.value = '';
+      return;
+    }
+    ticket.noteFile = file;
+  }
+
+  clearNoteFile(ticket: any) {
+    ticket.noteFile = null;
+    ticket.noteFileError = '';
+  }
+
+  async sendNote(ticket: any) {
+    const text = (ticket.noteDraft || '').trim();
+    const file: File | null = ticket.noteFile || null;
+    if (!text && !file) return;
+
+    ticket.sendingNote = true;
+    try {
+      let attachment;
+      if (file) {
+        attachment = await this.firebase.uploadTicketAttachment(ticket.id, file);
+      }
+      await this.firebase.addTicketNote(
+        ticket.id,
+        { author: this.userName, role: 'technician', text, attachment },
+        'unreadForUser',
+      );
+      ticket.noteDraft = '';
+      ticket.noteFile = null;
+    } catch (err: any) {
+      console.error('Error sending note:', err);
+      ticket.noteFileError = err?.message || 'Failed to send note.';
+    } finally {
+      ticket.sendingNote = false;
+    }
   }
 
   logout() {

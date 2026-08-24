@@ -1,0 +1,30 @@
+<div class="pagination-bar" *ngIf="totalItems > 0">
+  <div class="pagination-info">
+    Showing {{ rangeStart }}–{{ rangeEnd }} of {{ totalItems }}
+  </div>
+  <div class="pagination-controls">
+    <button
+      class="page-btn"
+      [disabled]="currentPage === 1"
+      (click)="prev()"
+      aria-label="Previous page">
+      &lsaquo;
+    </button>
+
+    <button
+      *ngFor="let page of pages"
+      class="page-btn"
+      [class.active]="page === currentPage"
+      (click)="goTo(page)">
+      {{ page }}
+    </button>
+
+    <button
+      class="page-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="next()"
+      aria-label="Next page">
+      &rsaquo;
+    </button>
+  </div>
+</div>

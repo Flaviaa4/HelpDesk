@@ -128,27 +128,38 @@
         <table class="tickets-table">
           <thead>
             <tr>
-              <th>Ticket ID</th>
-              <th>Description</th>
-              <th>Priorities</th>
+              <th>Issue</th>
+              <th>User</th>
+              <th>Technician</th>
+              <th>Priority</th>
               <th>Status</th>
-              <th>Date of Creation</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="tickets.length === 0">
-              <td colspan="6" style="text-align:center; padding:2rem; color:#9AA0AC;">
+            <tr *ngIf="loadError">
+              <td colspan="5" style="text-align:center; padding:2rem; color:#E05C00;">
+                {{ loadError }}
+              </td>
+            </tr>
+            <tr *ngIf="!loadError && loading">
+              <td colspan="5" style="text-align:center; padding:2rem; color:#9AA0AC;">
+                Loading tickets...
+              </td>
+            </tr>
+            <tr *ngIf="!loadError && !loading && tickets.length === 0">
+              <td colspan="5" style="text-align:center; padding:2rem; color:#9AA0AC;">
                 No tickets submitted yet.
               </td>
             </tr>
             <tr *ngFor="let ticket of tickets">
-              <td>{{ ticket.id }}</td>
-              <td>{{ ticket.description }}</td>
+              <td>{{ ticket.title }}</td>
+              <td>{{ ticket.user }}</td>
+              <td>
+                <span *ngIf="ticket.technicianName">{{ ticket.technicianName }}</span>
+                <span class="badge-unassigned" *ngIf="!ticket.technicianName">Unassigned</span>
+              </td>
               <td><span class="badge" [ngClass]="'badge-' + ticket.priority.toLowerCase()">{{ ticket.priority }}</span></td>
               <td><span class="badge" [ngClass]="'badge-' + ticket.status.toLowerCase()">{{ ticket.status }}</span></td>
-              <td>{{ ticket.createdOn }}</td>
-              <td><button class="btn-view">View</button></td>
             </tr>
           </tbody>
         </table>

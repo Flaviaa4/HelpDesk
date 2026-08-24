@@ -45,7 +45,10 @@ export class Login {
       }
     } catch (err: any) {
       this.loading = false;
-      this.errorMsg = 'Invalid email or password.';
+      this.errorMsg =
+        err?.code === 'account-not-found'
+          ? 'This account no longer exists. Please contact your administrator.'
+          : 'Invalid email or password.';
     }
   }
 }

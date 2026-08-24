@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from '../services/firebase';
+import { PaginationComponent } from '../shared/pagination/pagination';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-tickets',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './tickets.html',
   styleUrl: './tickets.css',
 })
@@ -22,11 +24,16 @@ export class Tickets implements OnInit, OnDestroy {
   profileOpen = false;
   userName = '';
 
+  currentPage = 1;
+  pageSize = 10;
+
   assigningTicket: any = null;
   selectedTechnicianId = '';
   errorMsg = '';
   successMsg = '';
   loadError = '';
+
+  deletingTicketId: string | null = null;
 
   private ticketsSub?: Subscription;
 
@@ -39,12 +46,11 @@ export class Tickets implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Must run synchronously (no prior `await`) so the real-time listener
-    // is registered within Angular's injection context.
     this.ticketsSub = this.firebase.getTicketsRealtime().subscribe({
       next: (raw) => {
         this.tickets = raw.map((t) => ({
           id: t.id,
+          ticketNumber: t.ticketNumber || null,
           subject: t.title || '',
           user: t.userName || 'Unknown',
           priority: t.priority || 'low',
@@ -62,6 +68,10 @@ export class Tickets implements OnInit, OnDestroy {
     });
 
     this.loadTechnicians();
+
+    this.firebase.backfillTicketNumbers().catch((err) => {
+      console.error('Error backfilling ticket numbers:', err);
+    });
   }
 
   private async loadTechnicians() {
@@ -85,6 +95,15 @@ export class Tickets implements OnInit, OnDestroy {
       const matchesStatus = !this.selectedStatus || t.status === this.selectedStatus;
       return matchesSearch && matchesPriority && matchesStatus;
     });
+  }
+
+  get pagedTickets() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredTickets.slice(start, start + this.pageSize);
+  }
+
+  resetPage() {
+    this.currentPage = 1;
   }
 
   toggleProfile() {
@@ -126,14 +145,22 @@ export class Tickets implements OnInit, OnDestroy {
     }
   }
 
-  async deleteTicket(ticketId: string) {
-    if (confirm('Are you sure you want to delete this ticket?')) {
-      try {
-        await this.firebase.deleteTicket(ticketId);
-      } catch (err) {
-        console.error('Error deleting ticket:', err);
-      }
+  deleteTicket(ticketId: string) {
+    this.deletingTicketId = ticketId;
+  }
+
+  cancelDeleteTicket() {
+    this.deletingTicketId = null;
+  }
+
+  async confirmDeleteTicket() {
+    if (!this.deletingTicketId) return;
+    try {
+      await this.firebase.deleteTicket(this.deletingTicketId);
+    } catch (err) {
+      console.error('Error deleting ticket:', err);
     }
+    this.deletingTicketId = null;
   }
 
   logout() {

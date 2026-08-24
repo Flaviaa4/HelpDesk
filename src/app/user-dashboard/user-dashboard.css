@@ -151,15 +151,25 @@
 }
 
 .badge-open {
-  background: #E05C00;
+  background: #C8D8ED;
 }
 
 .badge-resolved {
-  background: #3D9B3D;
+  background: #7DC87D;
 }
 
-.badge-progress {
-  background: #F5A623;
+.badge-in_progress {
+  background: #F5C97A;
+}
+
+.badge-unassigned {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9AA0AC;
+  background: #F0F2F5;
 }
 
 .btn-submit-ticket {

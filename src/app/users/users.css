@@ -364,12 +364,13 @@
 .table-card {
   background: #ffffff;
   border-radius: 10px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
 }
 
 .users-table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
 }
 

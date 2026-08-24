@@ -38,9 +38,9 @@
         <table class="tickets-table">
           <thead>
             <tr>
-              <th>Ticket ID</th>
-              <th>Description</th>
-              <th>Priorities</th>
+              <th>Issue</th>
+              <th>User</th>
+              <th>Priority</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -51,8 +51,8 @@
     </td>
   </tr>
   <tr *ngFor="let ticket of recentTickets">
-    <td>{{ ticket.id }}</td>
-    <td>{{ ticket.description }}</td>
+    <td>{{ ticket.title }}</td>
+    <td>{{ ticket.user }}</td>
     <td><span class="badge" [ngClass]="'badge-' + ticket.priority.toLowerCase()">{{ ticket.priority }}</span></td>
     <td><span class="badge" [ngClass]="'badge-' + ticket.status.toLowerCase()">{{ ticket.status }}</span></td>
   </tr>
@@ -63,7 +63,6 @@
         </button>
       </div>
     </div>
-     <app-chat></app-chat>
 <div class="bottom-nav">
   <a class="bottom-nav-item active" routerLink="/technician-dashboard">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">

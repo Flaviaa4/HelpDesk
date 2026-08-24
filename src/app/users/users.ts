@@ -1,22 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FirebaseService } from '../services/firebase';
+import { PaginationComponent } from '../shared/pagination/pagination';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent, ConfirmDialogComponent],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
-export class Users implements OnInit {
+export class Users implements OnInit, OnDestroy {
   searchTerm = '';
   selectedRole = 'all';
   menuOpen = false;
   users: any[] = [];
   loading = true;
+
+  currentPage = 1;
+  pageSize = 10;
 
   departments = ['Network', 'Hardware', 'Software', 'Email', 'Access'];
 
@@ -25,8 +31,12 @@ export class Users implements OnInit {
   successMsg = '';
   errorMsg = '';
 
+  deletingUserId: string | null = null;
+
   profileOpen = false;
   adminName = '';
+
+  private usersSub?: Subscription;
 
   constructor(
     private firebase: FirebaseService,
@@ -36,8 +46,24 @@ export class Users implements OnInit {
     this.adminName = (user.role || '').toLowerCase().trim() === 'admin' ? user.name : 'Admin';
   }
 
-  async ngOnInit() {
-    await this.loadUsers();
+  ngOnInit() {
+    // Must run synchronously (no prior `await`) so the real-time listener
+    // is registered within Angular's injection context.
+    this.usersSub = this.firebase.getUsersRealtime().subscribe({
+      next: (all) => {
+        this.users = all.filter((u: any) => u.role !== 'admin');
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error streaming users:', err);
+        this.errorMsg = 'Failed to load users.';
+        this.loading = false;
+      },
+    });
+  }
+
+  ngOnDestroy() {
+    this.usersSub?.unsubscribe();
   }
 
   get filteredUsers() {
@@ -52,21 +78,17 @@ export class Users implements OnInit {
     });
   }
 
-  toggleProfile() {
-    this.profileOpen = !this.profileOpen;
+  get pagedUsers() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredUsers.slice(start, start + this.pageSize);
   }
 
-  async loadUsers() {
-    try {
-      this.loading = true;
-      const all = await this.firebase.getUsers();
-      this.users = all.filter((u: any) => u.role !== 'admin');
-    } catch (err) {
-      console.error('Error loading users:', err);
-      this.errorMsg = 'Failed to load users.';
-    } finally {
-      this.loading = false;
-    }
+  resetPage() {
+    this.currentPage = 1;
+  }
+
+  toggleProfile() {
+    this.profileOpen = !this.profileOpen;
   }
 
   toggleMenu() {
@@ -97,21 +119,27 @@ export class Users implements OnInit {
       this.editingUser.department = this.selectedDepartment;
       this.successMsg = 'Department assigned successfully!';
       setTimeout(() => this.closeAssignDept(), 1500);
-      await this.loadUsers();
     } catch {
       this.errorMsg = 'Failed to assign department.';
     }
   }
 
-  async deleteUser(userId: string) {
-    if (confirm('Are you sure you want to delete this user?')) {
-      try {
-        await this.firebase.deleteUser(userId);
-        await this.loadUsers();
-      } catch {
-        this.errorMsg = 'Failed to delete user.';
-      }
+  deleteUser(userId: string) {
+    this.deletingUserId = userId;
+  }
+
+  cancelDeleteUser() {
+    this.deletingUserId = null;
+  }
+
+  async confirmDeleteUser() {
+    if (!this.deletingUserId) return;
+    try {
+      await this.firebase.deleteUser(this.deletingUserId);
+    } catch {
+      this.errorMsg = 'Failed to delete user.';
     }
+    this.deletingUserId = null;
   }
 
   logout() {

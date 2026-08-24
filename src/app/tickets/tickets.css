@@ -299,12 +299,13 @@
 .table-card {
   background: #ffffff;
   border-radius: 10px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 2px 8px rgba(20, 57, 106, 0.06);
 }
 
 .tickets-table {
   width: 100%;
+  min-width: 900px;
   border-collapse: collapse;
 }
 
@@ -360,16 +361,16 @@
 }
 
 .badge-open {
-  background: #E05C00;
+  background: #C8D8ED;
 }
 
 .badge-resolved {
-  background: #3D9B3D;
+  background: #7DC87D;
 }
 
 .badge-inprogress,
 .badge-in_progress {
-  background: #F5A623;
+  background: #F5C97A;
 }
 
 .badge-pending {
@@ -406,6 +407,16 @@
 
 .btn-view:hover {
   background: #1a4f96;
+}
+
+.btn-view:disabled {
+  background: #C7CCD6;
+  color: #F0F2F5;
+  cursor: not-allowed;
+}
+
+.btn-view:disabled:hover {
+  background: #C7CCD6;
 }
 
 .btn-delete {

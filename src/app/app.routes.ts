@@ -11,7 +11,6 @@ import { SettingsComponent } from './settings/settings';
 import { ProfileComponent } from './profile/profile';
 import { USettings } from './u-settings/u-settings';
 import { UProfile } from './u-profile/u-profile';
-import { ChatComponent } from './shared/chat/chat';
 import { TechnicianDashboard } from './technician-dashboard/technician-dashboard';
 import { MyTickets } from './my-tickets/my-tickets';
 import { TechnicianSettings } from './technician-settings/technician-settings';
@@ -33,7 +32,6 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [roleGuard(['admin'])] },
   { path: 'u-settings', component: USettings, canActivate: [roleGuard(['user'])] },
   { path: 'u-profile', component: UProfile, canActivate: [roleGuard(['user'])] },
-  { path: 'chat', component: ChatComponent },
   { path: 'technician-dashboard', component: TechnicianDashboard, canActivate: [roleGuard(['technician'])] },
   { path: 'my-tickets', component: MyTickets, canActivate: [roleGuard(['technician'])] },
   { path: 'technician-settings', component: TechnicianSettings, canActivate: [roleGuard(['technician'])] },
