@@ -32,12 +32,6 @@ export class SubmitTicket implements OnInit {
 
   departments = ['Network', 'Hardware', 'Software', 'Email', 'Access'];
 
-  technicians: any[] = [];
-
-  get filteredTechnicians() {
-    if (!this.selectedDepartment) return [];
-    return this.technicians.filter((t) => t.department === this.selectedDepartment);
-  }
 
   constructor(
     private firebase: FirebaseService,
@@ -48,17 +42,8 @@ export class SubmitTicket implements OnInit {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userName = user.name || user.userName || 'User';
     this.userId = user.uid || '';
-    await this.loadTechnicians();
   }
 
-  async loadTechnicians() {
-    try {
-      const all = await this.firebase.getTechnicians();
-      this.technicians = all;
-    } catch {
-      this.technicians = [];
-    }
-  }
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
@@ -103,7 +88,6 @@ export class SubmitTicket implements OnInit {
         priority: this.priority,
         category: this.category,
         department: this.selectedDepartment,
-        technicianId: this.selectedTechnician?.uid || null,
         technicianName: this.selectedTechnician?.name || null,
         createdOn: this.createdOn || new Date().toISOString().split('T')[0],
       });

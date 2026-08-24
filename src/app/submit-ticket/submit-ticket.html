@@ -64,21 +64,6 @@
           </select>
         </div>
 
-        <div class="form-group-full" *ngIf="selectedDepartment">
-          <label class="form-label">Select Technician :</label>
-          <div class="tech-list">
-            <div
-              class="tech-card"
-              *ngFor="let tech of filteredTechnicians"
-              [class.selected]="selectedTechnician?.id === tech.id"
-              [class.unavailable]="tech.available === false"
-              (click)="selectTechnician(tech)"
-            >
-              <div class="tech-name" [class.available-text]="tech.available !== false">{{ tech.name }}</div>
-              <div class="tech-status">{{ tech.available === false ? 'Unavailable' : 'Available' }}</div>
-            </div>
-          </div>
-        </div>
         <div class="form-group-full">
           <label class="form-label">Description</label>
           <textarea
@@ -102,7 +87,7 @@
       </div>
     </div>
   </div>
- 
+
   <div class="bottom-nav">
     <a class="bottom-nav-item" routerLink="/user-dashboard">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
