@@ -12,10 +12,14 @@ It is designed to make communication between users and IT support teams easier a
 - Describe the issue
 - Track the progress of their request
 
+## For Technicians:
+- Receives the tickets they were assigned to
+- Resolves and Updates tickets statuses
+
 ## For Admins:
 - View all reported issues
-- Manage and resolve problems
-- Prioritize urgent requests
+- Manage and assign tickets to technicians
+- Manage Users by removing or editing them
 
 ## Credentials of default users
 
