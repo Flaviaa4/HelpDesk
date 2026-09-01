@@ -420,7 +420,7 @@
 }
 
 .btn-delete {
-  background: #E05C00;
+  background: #d52a17;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -433,7 +433,7 @@
 }
 
 .btn-delete:hover {
-  background: #cc4400;
+  background: #e45850;
 }
 
 .modal-overlay {

@@ -6,11 +6,12 @@ import { Subscription } from 'rxjs';
 import { FirebaseService } from '../services/firebase';
 import { PaginationComponent } from '../shared/pagination/pagination';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent, ConfirmDialogComponent],
+  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent, ConfirmDialogComponent, LoadingSpinnerComponent],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })

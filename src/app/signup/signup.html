@@ -46,7 +46,9 @@
       </div>
 
       <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
-     <button class="btn-signup" (click)="register()">Sign up</button>
+     <button class="btn-signup" [disabled]="loading" (click)="register()">
+       {{ loading ? 'Creating account...' : 'Sign up' }}
+     </button>
 
     <div class="signin-row">
         Have an account already ? <a routerLink="/login">Log in</a>

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FirebaseService } from '../services/firebase';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, LoadingSpinnerComponent],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })

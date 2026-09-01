@@ -7,6 +7,7 @@ import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
 import { PaginationComponent } from '../shared/pagination/pagination';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
 const STATUS_LABELS: Record<string, string> = {
   open: 'Open',
@@ -23,7 +24,7 @@ const STATUS_VALUES: Record<string, string> = {
 @Component({
   selector: 'app-my-tickets',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent, PaginationComponent, LoadingSpinnerComponent],
   templateUrl: './my-tickets.html',
   styleUrl: './my-tickets.css',
 })

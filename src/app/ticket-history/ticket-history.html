@@ -43,12 +43,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="tickets.length === 0">
+            <tr *ngIf="loading">
+              <td colspan="7">
+                <app-loading-spinner label="Loading tickets..."></app-loading-spinner>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && tickets.length === 0">
               <td colspan="7" style="text-align:center; padding:2rem; color:#9AA0AC;">
                 No tickets history available.
               </td>
             </tr>
-            <tr *ngIf="tickets.length > 0 && filteredTickets.length === 0">
+            <tr *ngIf="!loading && tickets.length > 0 && filteredTickets.length === 0">
               <td colspan="7" style="text-align:center; padding:2rem; color:#9AA0AC;">
                 No tickets match your search.
               </td>

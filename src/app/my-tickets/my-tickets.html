@@ -55,12 +55,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngIf="tickets.length === 0">
+            <tr *ngIf="loading">
+              <td colspan="9">
+                <app-loading-spinner label="Loading tickets..."></app-loading-spinner>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && tickets.length === 0">
               <td colspan="9" class="empty-cell">
                 No tickets assigned yet.
               </td>
             </tr>
-            <tr *ngIf="tickets.length > 0 && filteredTickets.length === 0">
+            <tr *ngIf="!loading && tickets.length > 0 && filteredTickets.length === 0">
               <td colspan="9" class="empty-cell">
                 No tickets match your filters.
               </td>
@@ -184,5 +189,4 @@
       My Tickets
     </a>
   </div>
-
 </div>

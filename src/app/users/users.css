@@ -630,6 +630,32 @@
   background: #1a4f96;
 }
 
+.btn-assign.assigned {
+  background: #3D9B3D;
+}
+
+.btn-assign.assigned:hover {
+  background: #2f7d2f;
+}
+
+.btn-delete {
+  background: #d52a17;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+  margin-right: 0.5rem;
+}
+
+.btn-delete:hover {
+  background: #e45850;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -729,7 +755,7 @@
 }
 
 .error-msg {
-  color: #E05C00;
+  color: #e00b00;
   font-size: 0.82rem;
   margin-bottom: 0.5rem;
 }

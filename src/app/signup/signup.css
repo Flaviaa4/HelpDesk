@@ -170,12 +170,17 @@
   transition: background 0.2s, transform 0.1s;
 }
 
-.btn-signup:hover {
+.btn-signup:hover:not(:disabled) {
   background: #1a4f96;
 }
 
-.btn-signup:active {
+.btn-signup:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+.btn-signup:disabled {
+  background: #7c8ba3;
+  cursor: not-allowed;
 }
 
 .signin-row {

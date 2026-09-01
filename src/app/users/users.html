@@ -105,7 +105,9 @@
           </thead>
           <tbody>
             <tr *ngIf="loading">
-              <td colspan="6" class="empty-state">Loading users...</td>
+              <td colspan="6">
+                <app-loading-spinner label="Loading users..."></app-loading-spinner>
+              </td>
             </tr>
             <tr *ngIf="!loading && users.length === 0">
               <td colspan="6" class="empty-state">No users found.</td>
@@ -133,9 +135,10 @@
                 <div class="action-btns">
                   <button
                     class="btn-assign"
+                    [class.assigned]="user.department"
                     *ngIf="user.role === 'technician'"
                     (click)="openAssignDept(user)">
-                    Assign Dept
+                    {{ user.department ? 'Update Dept' : 'Assign Dept' }}
                   </button>
                   <button class="btn-delete" (click)="deleteUser(user.id)">
                     Delete

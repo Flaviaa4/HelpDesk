@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
@@ -37,55 +37,102 @@ export class FirebaseService {
     private auth: Auth,
     private firestore: Firestore,
     private storage: Storage,
+    private ngZone: NgZone,
   ) {}
 
-  async register(email: string, password: string, name: string) {
-    let role = 'user';
-    if (email.endsWith('@ahelpdesk.com')) {
-      role = 'admin';
-    } else if (email.endsWith('@thelpdesk.com')) {
-      role = 'technician';
-    } else if (email.endsWith('@uhelpdesk.com')) {
-      role = 'user';
-    }
-
-    const cred = await createUserWithEmailAndPassword(this.auth, email, password);
-    await addDoc(collection(this.firestore, 'users'), {
-      uid: cred.user.uid,
-      name,
-      email,
-      role,
-      createdAt: new Date(),
+  // Proven with diagnostic logging, not assumed: even with zone.js properly
+  // installed and active, Firestore's real-time listener callback (from
+  // collectionData/onSnapshot) still fires OUTSIDE the Angular zone —
+  // NgZone.isInAngularZone() was true when .subscribe() ran in ngOnInit,
+  // but false inside the next() callback itself. AngularFire ships its own
+  // zone-rewrapping for exactly this gap, gated on Angular's DI injection
+  // context being active at call time — which fails here (see the "outside
+  // injection context" console warning), so its protection never engages.
+  // Forcing every emission back into the zone here is the fix; it does not
+  // depend on AngularFire's wrapping succeeding.
+  private realtime<T>(source: Observable<T>): Observable<T> {
+    return new Observable<T>((subscriber) => {
+      const sub = source.subscribe({
+        next: (value) => this.ngZone.run(() => subscriber.next(value)),
+        error: (err) => this.ngZone.run(() => subscriber.error(err)),
+        complete: () => this.ngZone.run(() => subscriber.complete()),
+      });
+      return () => sub.unsubscribe();
     });
-    return cred;
   }
 
-  async login(email: string, password: string): Promise<any> {
-    const cred = await signInWithEmailAndPassword(this.auth, email, password);
+  // Same zone-escape risk as realtime() above, but for one-shot Auth/Firestore
+  // calls (login, register, writes): AngularFire's own re-wrapping is gated
+  // on Angular's DI injection context being active at call time, which our
+  // components' ngOnInit/event-handler calls don't satisfy, so it silently
+  // falls back to the raw, zone-unaware Firebase call. Forcing the
+  // settle callback back into the zone here is what makes a caller's
+  // `await this.firebase.x()` continuation (setting errorMsg, loading, etc.)
+  // actually repaint the screen.
+  private zonePromise<T>(promise: Promise<T>): Promise<T> {
+    return promise.then(
+      (value) => this.ngZone.run(() => value),
+      (err) => this.ngZone.run(() => {
+        throw err;
+      }),
+    );
+  }
 
-    const usersRef = collection(this.firestore, 'users');
-    const q = query(usersRef, where('uid', '==', cred.user.uid));
-    const snapshot = await getDocs(q);
-    if (!snapshot.empty) {
-      const userData = snapshot.docs[0].data();
-      return { uid: cred.user.uid, ...userData };
-    }
-    const byId = await getDoc(doc(this.firestore, 'users', cred.user.uid));
-    if (byId.exists()) {
-      return { uid: cred.user.uid, ...byId.data() };
-    }
+  register(email: string, password: string, name: string) {
+    return this.zonePromise(
+      (async () => {
+        let role = 'user';
+        if (email.endsWith('@ahelpdesk.com')) {
+          role = 'admin';
+        } else if (email.endsWith('@thelpdesk.com')) {
+          role = 'technician';
+        } else if (email.endsWith('@uhelpdesk.com')) {
+          role = 'user';
+        }
 
-    // No Firestore profile for an otherwise-valid Firebase Auth account
-    // means an admin deleted this user. The client SDK can only delete
-    // the currently-signed-in user's Auth account, not an arbitrary
-    // other user's, so the Firestore profile is the only thing an admin
-    // can actually remove. Enforcing access here, at login, is what
-    // actually revokes the account instead of leaving it able to sign
-    // back in with a fallback 'user' role.
-    await signOut(this.auth);
-    const err: any = new Error('This account no longer exists.');
-    err.code = 'account-not-found';
-    throw err;
+        const cred = await createUserWithEmailAndPassword(this.auth, email, password);
+        await addDoc(collection(this.firestore, 'users'), {
+          uid: cred.user.uid,
+          name,
+          email,
+          role,
+          createdAt: new Date(),
+        });
+        return cred;
+      })(),
+    );
+  }
+
+  login(email: string, password: string) {
+    return this.zonePromise(
+      (async (): Promise<any> => {
+        const cred = await signInWithEmailAndPassword(this.auth, email, password);
+
+        const usersRef = collection(this.firestore, 'users');
+        const q = query(usersRef, where('uid', '==', cred.user.uid));
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+          const userData = snapshot.docs[0].data();
+          return { uid: cred.user.uid, ...userData };
+        }
+        const byId = await getDoc(doc(this.firestore, 'users', cred.user.uid));
+        if (byId.exists()) {
+          return { uid: cred.user.uid, ...byId.data() };
+        }
+
+        // No Firestore profile for an otherwise-valid Firebase Auth account
+        // means an admin deleted this user. The client SDK can only delete
+        // the currently-signed-in user's Auth account, not an arbitrary
+        // other user's, so the Firestore profile is the only thing an admin
+        // can actually remove. Enforcing access here, at login, is what
+        // actually revokes the account instead of leaving it able to sign
+        // back in with a fallback 'user' role.
+        await signOut(this.auth);
+        const err: any = new Error('This account no longer exists.');
+        err.code = 'account-not-found';
+        throw err;
+      })(),
+    );
   }
 
   async logout() {
@@ -96,14 +143,18 @@ export class FirebaseService {
     return this.auth.currentUser;
   }
 
-  async changePassword(currentPassword: string, newPassword: string) {
-    const user = this.auth.currentUser;
-    if (!user || !user.email) {
-      throw new Error('No authenticated user.');
-    }
-    const credential = EmailAuthProvider.credential(user.email, currentPassword);
-    await reauthenticateWithCredential(user, credential);
-    await updatePassword(user, newPassword);
+  changePassword(currentPassword: string, newPassword: string) {
+    return this.zonePromise(
+      (async () => {
+        const user = this.auth.currentUser;
+        if (!user || !user.email) {
+          throw new Error('No authenticated user.');
+        }
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, newPassword);
+      })(),
+    );
   }
 
   // Ticket numbers are a separate, sequential display ID (#1001, #1002, ...)
@@ -111,22 +162,26 @@ export class FirebaseService {
   // concurrent ticket creation never hands out the same number twice. The
   // Firestore document ID itself stays an opaque auto-generated string and
   // is only ever used internally (update/delete), never shown to users.
-  async createTicket(data: any) {
-    const counterRef = doc(this.firestore, 'counters', 'tickets');
-    const ticketRef = doc(collection(this.firestore, 'tickets'));
-    const ticketNumber = await runTransaction(this.firestore, async (tx) => {
-      const counterSnap = await tx.get(counterRef);
-      const next = (counterSnap.exists() ? counterSnap.data()['value'] : 1000) + 1;
-      tx.set(counterRef, { value: next }, { merge: true });
-      tx.set(ticketRef, {
-        ...data,
-        ticketNumber: next,
-        status: 'open',
-        createdAt: new Date(),
-      });
-      return next;
-    });
-    return { id: ticketRef.id, ticketNumber };
+  createTicket(data: any) {
+    return this.zonePromise(
+      (async () => {
+        const counterRef = doc(this.firestore, 'counters', 'tickets');
+        const ticketRef = doc(collection(this.firestore, 'tickets'));
+        const ticketNumber = await runTransaction(this.firestore, async (tx) => {
+          const counterSnap = await tx.get(counterRef);
+          const next = (counterSnap.exists() ? counterSnap.data()['value'] : 1000) + 1;
+          tx.set(counterRef, { value: next }, { merge: true });
+          tx.set(ticketRef, {
+            ...data,
+            ticketNumber: next,
+            status: 'open',
+            createdAt: new Date(),
+          });
+          return next;
+        });
+        return { id: ticketRef.id, ticketNumber };
+      })(),
+    );
   }
 
   // One-time migration for tickets created before ticket numbers existed.
@@ -168,7 +223,9 @@ export class FirebaseService {
   }
 
   getTicketsRealtime(): Observable<any[]> {
-    return collectionData(collection(this.firestore, 'tickets'), { idField: 'id' }) as Observable<any[]>;
+    return this.realtime(
+      collectionData(collection(this.firestore, 'tickets'), { idField: 'id' }) as Observable<any[]>,
+    );
   }
 
   async getUserTickets(uid: string) {
@@ -179,20 +236,20 @@ export class FirebaseService {
 
   getTicketsByTechnicianRealtime(technicianUid: string): Observable<any[]> {
     const q = query(collection(this.firestore, 'tickets'), where('technicianId', '==', technicianUid));
-    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return this.realtime(collectionData(q, { idField: 'id' }) as Observable<any[]>);
   }
 
   getTicketsByUserRealtime(userUid: string): Observable<any[]> {
     const q = query(collection(this.firestore, 'tickets'), where('userId', '==', userUid));
-    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return this.realtime(collectionData(q, { idField: 'id' }) as Observable<any[]>);
   }
 
-  async updateTicket(ticketId: string, data: any) {
-    await updateDoc(doc(this.firestore, 'tickets', ticketId), data);
+  updateTicket(ticketId: string, data: any) {
+    return this.zonePromise(updateDoc(doc(this.firestore, 'tickets', ticketId), data));
   }
 
-  async deleteTicket(ticketId: string) {
-    await deleteDoc(doc(this.firestore, 'tickets', ticketId));
+  deleteTicket(ticketId: string) {
+    return this.zonePromise(deleteDoc(doc(this.firestore, 'tickets', ticketId)));
   }
 
   private readonly maxAttachmentBytes = 10 * 1024 * 1024;
@@ -203,22 +260,26 @@ export class FirebaseService {
   // Storage has its own separate rules — the console's default Storage
   // rules deny everything, so uploads will fail with storage/unauthorized
   // until Storage rules also allow authenticated read/write.
-  async uploadTicketAttachment(ticketId: string, file: File) {
+  uploadTicketAttachment(ticketId: string, file: File) {
     if (file.size > this.maxAttachmentBytes) {
-      throw new Error('File is too large (max 10MB).');
+      return Promise.reject(new Error('File is too large (max 10MB).'));
     }
-    const path = `tickets/${ticketId}/${Date.now()}_${file.name}`;
-    const fileRef = ref(this.storage, path);
-    const snapshot = await uploadBytes(fileRef, file);
-    const url = await getDownloadURL(snapshot.ref);
-    return { name: file.name, url, size: file.size, type: file.type || 'application/octet-stream' };
+    return this.zonePromise(
+      (async () => {
+        const path = `tickets/${ticketId}/${Date.now()}_${file.name}`;
+        const fileRef = ref(this.storage, path);
+        const snapshot = await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(snapshot.ref);
+        return { name: file.name, url, size: file.size, type: file.type || 'application/octet-stream' };
+      })(),
+    );
   }
 
   // Per-ticket conversation: notes are stored directly on the ticket doc so
   // they ride along with the existing real-time ticket listeners with no
   // extra subscription. Adding a note also flips the other party's unread
   // flag; opening the thread clears your own.
-  async addTicketNote(
+  addTicketNote(
     ticketId: string,
     note: {
       author: string;
@@ -232,14 +293,16 @@ export class FirebaseService {
     if (note.attachment) {
       payload.attachment = note.attachment;
     }
-    await updateDoc(doc(this.firestore, 'tickets', ticketId), {
-      notes: arrayUnion(payload),
-      [unreadFlag]: true,
-    });
+    return this.zonePromise(
+      updateDoc(doc(this.firestore, 'tickets', ticketId), {
+        notes: arrayUnion(payload),
+        [unreadFlag]: true,
+      }),
+    );
   }
 
-  async markTicketNotesRead(ticketId: string, unreadFlag: 'unreadForUser' | 'unreadForTechnician') {
-    await updateDoc(doc(this.firestore, 'tickets', ticketId), { [unreadFlag]: false });
+  markTicketNotesRead(ticketId: string, unreadFlag: 'unreadForUser' | 'unreadForTechnician') {
+    return this.zonePromise(updateDoc(doc(this.firestore, 'tickets', ticketId), { [unreadFlag]: false }));
   }
 
   async getUserByUid(uid: string) {
@@ -265,8 +328,10 @@ export class FirebaseService {
   }
 
   getUsersRealtime(): Observable<any[]> {
-    return (collectionData(collection(this.firestore, 'users'), { idField: 'id' }) as Observable<any[]>).pipe(
-      map((users) => users.map((u: any) => ({ ...u, uid: u.uid || u.id }))),
+    return this.realtime(
+      (collectionData(collection(this.firestore, 'users'), { idField: 'id' }) as Observable<any[]>).pipe(
+        map((users) => users.map((u: any) => ({ ...u, uid: u.uid || u.id }))),
+      ),
     );
   }
 
@@ -281,12 +346,12 @@ export class FirebaseService {
     return { id: d.id, ...data, uid: data.uid || d.id };
   }
 
-  async deleteUser(userId: string) {
-    await deleteDoc(doc(this.firestore, 'users', userId));
+  deleteUser(userId: string) {
+    return this.zonePromise(deleteDoc(doc(this.firestore, 'users', userId)));
   }
 
-  async updateUser(userId: string, data: any) {
-    await updateDoc(doc(this.firestore, 'users', userId), data);
+  updateUser(userId: string, data: any) {
+    return this.zonePromise(updateDoc(doc(this.firestore, 'users', userId), data));
   }
 
   async getStats(uid?: string) {

@@ -7,11 +7,12 @@ import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
 import { PaginationComponent } from '../shared/pagination/pagination';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-ticket-history',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent, PaginationComponent],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent, SidebarComponent, PaginationComponent, LoadingSpinnerComponent],
   templateUrl: './ticket-history.html',
   styleUrl: './ticket-history.css',
 })

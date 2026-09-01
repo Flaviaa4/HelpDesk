@@ -5,11 +5,6 @@
   <div class="blob blob-bottom-center"></div>
 
   <div class="header">
-    <img
-      src="UserLogo.png"
-      alt=""
-      class="header-logo"
-    />
   </div>
 
   <div class="login-wrap">
@@ -36,7 +31,9 @@
       </div>
 
       <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
-         <button class="btn-login" (click)="login()">Sign In</button>
+         <button class="btn-login" [disabled]="loading" (click)="login()">
+           {{ loading ? 'Signing in...' : 'Sign In' }}
+         </button>
 
       <div class="footer-row">
         <label class="remember-me">
@@ -47,7 +44,7 @@
       </div>
 
       <div class="signup-row">
-        Not a member yet ? <a routerLink="/signup">Sign up</a>
+        Not a member yet ?<a routerLink="/signup">Sign up</a>
       </div>
 
     </div>

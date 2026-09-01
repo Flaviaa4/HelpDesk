@@ -152,12 +152,17 @@
   transition: background 0.2s, transform 0.1s;
 }
 
-.btn-login:hover {
+.btn-login:hover:not(:disabled) {
   background: #1a4f96;
 }
 
-.btn-login:active {
+.btn-login:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+.btn-login:disabled {
+  background: #7c8ba3;
+  cursor: not-allowed;
 }
 
 .footer-row {

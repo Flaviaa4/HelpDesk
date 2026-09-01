@@ -5,11 +5,12 @@ import { Subscription } from 'rxjs';
 import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
 import { FirebaseService } from '../services/firebase';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-technician-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterModule, HeaderComponent, SidebarComponent, LoadingSpinnerComponent],
   templateUrl: './technician-dashboard.html',
   styleUrl: './technician-dashboard.css',
 })

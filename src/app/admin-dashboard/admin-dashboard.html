@@ -71,7 +71,8 @@
     <div class="main">
 
       <div class="page-title">Welcome, {{ userName }}!</div>
-      <div class="stats-row">
+      <app-loading-spinner *ngIf="loading" label="Loading your stats..."></app-loading-spinner>
+      <div class="stats-row" *ngIf="!loading">
         <div class="stat-card open">
           <div class="stat-info">
             <div class="stat-label">Open </div>
@@ -142,8 +143,8 @@
               </td>
             </tr>
             <tr *ngIf="!loadError && loading">
-              <td colspan="5" style="text-align:center; padding:2rem; color:#9AA0AC;">
-                Loading tickets...
+              <td colspan="5">
+                <app-loading-spinner label="Loading tickets..."></app-loading-spinner>
               </td>
             </tr>
             <tr *ngIf="!loadError && !loading && tickets.length === 0">
