@@ -49,16 +49,18 @@ export class Tickets implements OnInit, OnDestroy {
   ngOnInit() {
     this.ticketsSub = this.firebase.getTicketsRealtime().subscribe({
       next: (raw) => {
-        this.tickets = raw.map((t) => ({
-          id: t.id,
-          ticketNumber: t.ticketNumber || null,
-          subject: t.title || '',
-          user: t.userName || 'Unknown',
-          priority: t.priority || 'low',
-          status: t.status || 'open',
-          technicianId: t.technicianId || null,
-          technicianName: t.technicianName || '',
-        }));
+        this.tickets = raw
+          .map((t) => ({
+            id: t.id,
+            ticketNumber: t.ticketNumber || null,
+            subject: t.title || '',
+            user: t.userName || 'Unknown',
+            priority: t.priority || 'low',
+            status: t.status || 'open',
+            technicianId: t.technicianId || null,
+            technicianName: t.technicianName || '',
+          }))
+          .sort((a, b) => (a.ticketNumber || 0) - (b.ticketNumber || 0));
         this.loading = false;
       },
       error: (err) => {
@@ -70,9 +72,15 @@ export class Tickets implements OnInit, OnDestroy {
 
     this.loadTechnicians();
 
-    this.firebase.backfillTicketNumbers().catch((err) => {
-      console.error('Error backfilling ticket numbers:', err);
-    });
+    // Order matters: the reset migrates any ticket still on the old 1000+
+    // scheme down to a clean 1, 2, 3... sequence; backfill then covers any
+    // ticket that has no number at all. Both are no-ops once done.
+    this.firebase
+      .resetTicketNumbersIfNeeded()
+      .then(() => this.firebase.backfillTicketNumbers())
+      .catch((err) => {
+        console.error('Error normalizing ticket numbers:', err);
+      });
   }
 
   private async loadTechnicians() {

@@ -134,7 +134,7 @@
               </td>
             </tr>
             <tr *ngFor="let ticket of pagedTickets">
-              <td>{{ ticket.ticketNumber ? '#' + ticket.ticketNumber : '—' }}</td>
+              <td>{{ ticket.ticketNumber ? ticket.ticketNumber.toString().padStart(2, '0') : '—' }}</td>
               <td>{{ ticket.subject }}</td>
               <td>{{ ticket.user }}</td>
               <td>

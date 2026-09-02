@@ -25,7 +25,6 @@ import {
   writeBatch,
   arrayUnion,
 } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -36,7 +35,6 @@ export class FirebaseService {
   constructor(
     private auth: Auth,
     private firestore: Firestore,
-    private storage: Storage,
     private ngZone: NgZone,
   ) {}
 
@@ -157,7 +155,7 @@ export class FirebaseService {
     );
   }
 
-  // Ticket numbers are a separate, sequential display ID (#1001, #1002, ...)
+  // Ticket numbers are a separate, sequential display ID (01, 02, ...)
   // kept in a counters/tickets doc and assigned inside a transaction so
   // concurrent ticket creation never hands out the same number twice. The
   // Firestore document ID itself stays an opaque auto-generated string and
@@ -169,7 +167,7 @@ export class FirebaseService {
         const ticketRef = doc(collection(this.firestore, 'tickets'));
         const ticketNumber = await runTransaction(this.firestore, async (tx) => {
           const counterSnap = await tx.get(counterRef);
-          const next = (counterSnap.exists() ? counterSnap.data()['value'] : 1000) + 1;
+          const next = (counterSnap.exists() ? counterSnap.data()['value'] : 0) + 1;
           tx.set(counterRef, { value: next }, { merge: true });
           tx.set(ticketRef, {
             ...data,
@@ -196,12 +194,43 @@ export class FirebaseService {
 
     missing.sort((a, b) => this.timestampMillis(a.createdAt) - this.timestampMillis(b.createdAt));
 
-    let next = all.reduce((max, t) => (t.ticketNumber && t.ticketNumber > max ? t.ticketNumber : max), 1000);
+    let next = all.reduce((max, t) => (t.ticketNumber && t.ticketNumber > max ? t.ticketNumber : max), 0);
 
     const chunkSize = 450;
     for (let i = 0; i < missing.length; i += chunkSize) {
       const batch = writeBatch(this.firestore);
       for (const t of missing.slice(i, i + chunkSize)) {
+        next += 1;
+        batch.update(t.ref, { ticketNumber: next });
+      }
+      await batch.commit();
+    }
+
+    await setDoc(doc(this.firestore, 'counters', 'tickets'), { value: next }, { merge: true });
+  }
+
+  // One-time migration off the old 1000+ offset scheme down to a clean
+  // 1, 2, 3... sequence, preserving relative order (by existing ticket
+  // number, falling back to creation time). Detects whether any ticket is
+  // still numbered >= 1000 so it's safe to call on every load — once
+  // every ticket is renumbered below 1000, this is a no-op forever after.
+  async resetTicketNumbersIfNeeded() {
+    const snapshot = await getDocs(collection(this.firestore, 'tickets'));
+    const all = snapshot.docs.map((d) => ({ ref: d.ref, id: d.id, ...d.data() }) as any);
+    const needsReset = all.some((t) => (t.ticketNumber || 0) >= 1000);
+    if (!needsReset) return;
+
+    all.sort(
+      (a, b) =>
+        (a.ticketNumber || 0) - (b.ticketNumber || 0) ||
+        this.timestampMillis(a.createdAt) - this.timestampMillis(b.createdAt),
+    );
+
+    let next = 0;
+    const chunkSize = 450;
+    for (let i = 0; i < all.length; i += chunkSize) {
+      const batch = writeBatch(this.firestore);
+      for (const t of all.slice(i, i + chunkSize)) {
         next += 1;
         batch.update(t.ref, { ticketNumber: next });
       }
@@ -252,47 +281,16 @@ export class FirebaseService {
     return this.zonePromise(deleteDoc(doc(this.firestore, 'tickets', ticketId)));
   }
 
-  private readonly maxAttachmentBytes = 10 * 1024 * 1024;
-
-  // Note attachments live in Storage, keyed by ticket, with just the
-  // resulting download URL + metadata stored on the note itself in
-  // Firestore. Firestore rules already gate access on request.auth, but
-  // Storage has its own separate rules — the console's default Storage
-  // rules deny everything, so uploads will fail with storage/unauthorized
-  // until Storage rules also allow authenticated read/write.
-  uploadTicketAttachment(ticketId: string, file: File) {
-    if (file.size > this.maxAttachmentBytes) {
-      return Promise.reject(new Error('File is too large (max 10MB).'));
-    }
-    return this.zonePromise(
-      (async () => {
-        const path = `tickets/${ticketId}/${Date.now()}_${file.name}`;
-        const fileRef = ref(this.storage, path);
-        const snapshot = await uploadBytes(fileRef, file);
-        const url = await getDownloadURL(snapshot.ref);
-        return { name: file.name, url, size: file.size, type: file.type || 'application/octet-stream' };
-      })(),
-    );
-  }
-
   // Per-ticket conversation: notes are stored directly on the ticket doc so
   // they ride along with the existing real-time ticket listeners with no
   // extra subscription. Adding a note also flips the other party's unread
   // flag; opening the thread clears your own.
   addTicketNote(
     ticketId: string,
-    note: {
-      author: string;
-      role: 'technician' | 'user';
-      text: string;
-      attachment?: { name: string; url: string; size: number; type: string };
-    },
+    note: { author: string; role: 'technician' | 'user'; text: string },
     unreadFlag: 'unreadForUser' | 'unreadForTechnician',
   ) {
-    const payload: any = { author: note.author, role: note.role, text: note.text, createdAt: new Date() };
-    if (note.attachment) {
-      payload.attachment = note.attachment;
-    }
+    const payload = { author: note.author, role: note.role, text: note.text, createdAt: new Date() };
     return this.zonePromise(
       updateDoc(doc(this.firestore, 'tickets', ticketId), {
         notes: arrayUnion(payload),

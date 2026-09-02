@@ -283,66 +283,10 @@
   color: #fff;
 }
 
-.note-attachment {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-top: 0.35rem;
-  font-size: 0.8rem;
-  color: #14396A;
-  text-decoration: none;
-  border-bottom: 1px dashed currentColor;
-}
-
-.note-attachment svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.note-bubble.mine .note-attachment {
-  color: #fff;
-}
-
-.note-file-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: #EEF2F8;
-  color: #14396A;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-}
-
-.note-file-chip svg {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-}
-
-.remove-file-btn {
-  background: none;
-  border: none;
-  color: #9AA0AC;
-  cursor: pointer;
-  font-size: 0.75rem;
-  padding: 0;
-}
-
-.remove-file-btn:hover {
-  color: #E05C00;
-}
-
 .note-file-error {
   color: #E05C00;
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
-}
-
-.note-file-input {
-  display: none;
 }
 
 .note-input-wrap {
@@ -363,29 +307,6 @@
 
 .note-input:focus {
   border-color: #14396A;
-}
-
-.attach-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border: 1px solid #D5DCE8;
-  border-radius: 6px;
-  padding: 0.5rem 0.65rem;
-  color: #14396A;
-  cursor: pointer;
-  transition: background 0.15s;
-  flex-shrink: 0;
-}
-
-.attach-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.attach-btn:hover {
-  background: #F0F4F8;
 }
 
 .send-btn {

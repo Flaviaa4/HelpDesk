@@ -72,7 +72,7 @@
             </tr>
             <ng-container *ngFor="let ticket of pagedTickets">
               <tr>
-                <td>{{ ticket.ticketNumber ? '#' + ticket.ticketNumber : '—' }}</td>
+                <td>{{ ticket.ticketNumber ? ticket.ticketNumber.toString().padStart(2, '0') : '—' }}</td>
                 <td>{{ ticket.user }}</td>
                 <td>{{ ticket.title }}</td>
                 <td>{{ ticket.description || '—' }}</td>
@@ -81,7 +81,7 @@
                   <span class="badge" [ngClass]="'badge-' + ticket.priority.toLowerCase()">{{ ticket.priority }}</span>
                 </td>
                 <td>
-                  <ng-container *ngIf="!ticket.editingStatus; else statusEditor">
+                  <ng-container *ngIf="!ticket.ui.editingStatus; else statusEditor">
                     <span class="badge"
                       [class.badge-open]="ticket.status === 'Open'"
                       [class.badge-progress]="ticket.status === 'In Progress'"
@@ -91,7 +91,7 @@
                   </ng-container>
                   <ng-template #statusEditor>
                     <div class="status-editor">
-                      <select [(ngModel)]="ticket.pendingStatus">
+                      <select [(ngModel)]="ticket.ui.pendingStatus">
                         <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
                       </select>
                       <button class="confirm-btn" (click)="confirmStatus(ticket)" title="Confirm">✓</button>
@@ -107,7 +107,7 @@
                   </button>
                 </td>
               </tr>
-              <tr class="note-row" *ngIf="ticket.addingNote">
+              <tr class="note-row" *ngIf="ticket.ui.addingNote">
                 <td colspan="9">
                   <div class="note-thread" *ngIf="ticket.notes.length > 0">
                     <div
@@ -116,46 +116,22 @@
                       [class.mine]="note.role === 'technician'">
                       <div class="note-author">{{ note.author }}</div>
                       <div class="note-text" *ngIf="note.text">{{ note.text }}</div>
-                      <a
-                        class="note-attachment"
-                        *ngIf="note.attachment"
-                        [href]="note.attachment.url"
-                        target="_blank"
-                        rel="noopener">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
-                        </svg>
-                        {{ note.attachment.name }}
-                      </a>
                     </div>
                   </div>
                   <div class="note-thread-empty" *ngIf="ticket.notes.length === 0">
                     No messages yet. Send the first note to {{ ticket.user }}.
                   </div>
-                  <div class="note-file-chip" *ngIf="ticket.noteFile">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
-                    </svg>
-                    {{ ticket.noteFile.name }}
-                    <button type="button" class="remove-file-btn" (click)="clearNoteFile(ticket); fileInput.value = ''">✕</button>
-                  </div>
-                  <div class="note-file-error" *ngIf="ticket.noteFileError">{{ ticket.noteFileError }}</div>
+                  <div class="note-file-error" *ngIf="ticket.ui.noteError">{{ ticket.ui.noteError }}</div>
                   <div class="note-input-wrap">
                     <input
                       class="note-input"
                       type="text"
                       placeholder="Type a note..."
-                      [(ngModel)]="ticket.noteDraft"
+                      [(ngModel)]="ticket.ui.noteDraft"
                       (keyup.enter)="sendNote(ticket)"
                     />
-                    <input #fileInput type="file" class="note-file-input" (change)="onFileSelected(ticket, $event)" />
-                    <button type="button" class="attach-btn" title="Attach a file" (click)="fileInput.click()">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
-                      </svg>
-                    </button>
-                    <button class="send-btn" [disabled]="ticket.sendingNote" (click)="sendNote(ticket)">
-                      {{ ticket.sendingNote ? 'Sending...' : 'Send' }}
+                    <button class="send-btn" [disabled]="ticket.ui.sendingNote" (click)="sendNote(ticket)">
+                      {{ ticket.ui.sendingNote ? 'Sending...' : 'Send' }}
                     </button>
                   </div>
                 </td>

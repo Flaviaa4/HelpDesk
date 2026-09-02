@@ -47,10 +47,11 @@ export class TechnicianDashboard implements OnInit, OnDestroy {
         this.resolvedCount = tickets.filter((t) => t.status === 'resolved').length;
 
         this.recentTickets = [...tickets]
-          .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt))
+          .sort((a, b) => (b.ticketNumber || 0) - (a.ticketNumber || 0))
           .slice(0, 5)
           .map((t) => ({
             id: t.id,
+            ticketNumber: t.ticketNumber || null,
             title: t.title || '',
             user: t.userName || 'Unknown',
             priority: t.priority || 'low',
@@ -69,12 +70,6 @@ export class TechnicianDashboard implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ticketsSub?.unsubscribe();
-  }
-
-  private timestampMillis(value: any): number {
-    if (value?.toMillis) return value.toMillis();
-    if (value?.seconds) return value.seconds * 1000;
-    return 0;
   }
 
   logout() {

@@ -9,6 +9,13 @@ import { FirebaseService } from '../services/firebase';
 import { PaginationComponent } from '../shared/pagination/pagination';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
+interface TicketUiState {
+  addingNote: boolean;
+  noteDraft: string;
+  noteError: string;
+  sendingNote: boolean;
+}
+
 @Component({
   selector: 'app-ticket-history',
   standalone: true,
@@ -29,6 +36,15 @@ export class TicketHistory implements OnInit, OnDestroy {
 
   private ticketsSub?: Subscription;
 
+  // Every real-time snapshot rebuilds `tickets` from scratch, so in-flight
+  // UI state (an open note editor, a "Sending..." flag) can't live on the
+  // ticket objects themselves — a write we make (like
+  // sending a note) triggers a fresh snapshot before our own async call
+  // finishes, replacing the object out from under it. This map is stable
+  // across rebuilds, keyed by ticket id, so mutations always land on
+  // whatever is currently rendered.
+  private uiById = new Map<string, TicketUiState>();
+
   constructor(
     private firebase: FirebaseService,
     private router: Router,
@@ -45,13 +61,14 @@ export class TicketHistory implements OnInit, OnDestroy {
 
     this.ticketsSub = this.firebase.getTicketsByUserRealtime(user.uid).subscribe({
       next: (raw) => {
-        const previousById = new Map(this.tickets.map((t) => [t.id, t]));
+        const seenIds = new Set<string>();
         this.tickets = [...raw]
-          .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt))
+          .sort((a, b) => (b.ticketNumber || 0) - (a.ticketNumber || 0))
           .map((t) => {
-            const prev = previousById.get(t.id);
+            seenIds.add(t.id);
             return {
               id: t.id,
+              ticketNumber: t.ticketNumber || null,
               title: t.title || '',
               category: t.category || '--',
               priority: t.priority || 'low',
@@ -60,13 +77,14 @@ export class TicketHistory implements OnInit, OnDestroy {
               createdOn: t.createdOn || this.formatTimestamp(t.createdAt),
               notes: t.notes || [],
               unread: !!t.unreadForUser,
-              addingNote: prev?.addingNote || false,
-              noteDraft: prev?.noteDraft || '',
-              noteFile: prev?.noteFile || null,
-              noteFileError: prev?.noteFileError || '',
-              sendingNote: prev?.sendingNote || false,
+              ui: this.uiFor(t.id),
             };
           });
+
+        for (const id of this.uiById.keys()) {
+          if (!seenIds.has(id)) this.uiById.delete(id);
+        }
+
         this.loading = false;
       },
       error: (err) => {
@@ -79,6 +97,15 @@ export class TicketHistory implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ticketsSub?.unsubscribe();
+  }
+
+  private uiFor(ticketId: string): TicketUiState {
+    let ui = this.uiById.get(ticketId);
+    if (!ui) {
+      ui = { addingNote: false, noteDraft: '', noteError: '', sendingNote: false };
+      this.uiById.set(ticketId, ui);
+    }
+    return ui;
   }
 
   get filteredTickets() {
@@ -110,8 +137,8 @@ export class TicketHistory implements OnInit, OnDestroy {
   }
 
   toggleNoteInput(ticket: any) {
-    ticket.addingNote = !ticket.addingNote;
-    if (ticket.addingNote && ticket.unread) {
+    ticket.ui.addingNote = !ticket.ui.addingNote;
+    if (ticket.ui.addingNote && ticket.unread) {
       ticket.unread = false;
       this.firebase.markTicketNotesRead(ticket.id, 'unreadForUser').catch((err) => {
         console.error('Error marking notes read:', err);
@@ -119,47 +146,24 @@ export class TicketHistory implements OnInit, OnDestroy {
     }
   }
 
-  onFileSelected(ticket: any, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0] || null;
-    ticket.noteFileError = '';
-    if (file && file.size > 10 * 1024 * 1024) {
-      ticket.noteFileError = 'File is too large (max 10MB).';
-      ticket.noteFile = null;
-      input.value = '';
-      return;
-    }
-    ticket.noteFile = file;
-  }
-
-  clearNoteFile(ticket: any) {
-    ticket.noteFile = null;
-    ticket.noteFileError = '';
-  }
-
   async sendNote(ticket: any) {
-    const text = (ticket.noteDraft || '').trim();
-    const file: File | null = ticket.noteFile || null;
-    if (!text && !file) return;
+    const ui = ticket.ui as TicketUiState;
+    const text = (ui.noteDraft || '').trim();
+    if (!text) return;
 
-    ticket.sendingNote = true;
+    ui.sendingNote = true;
     try {
-      let attachment;
-      if (file) {
-        attachment = await this.firebase.uploadTicketAttachment(ticket.id, file);
-      }
       await this.firebase.addTicketNote(
         ticket.id,
-        { author: this.userName, role: 'user', text, attachment },
+        { author: this.userName, role: 'user', text },
         'unreadForTechnician',
       );
-      ticket.noteDraft = '';
-      ticket.noteFile = null;
+      ui.noteDraft = '';
     } catch (err: any) {
       console.error('Error sending note:', err);
-      ticket.noteFileError = err?.message || 'Failed to send note.';
+      ui.noteError = 'Failed to send note.';
     } finally {
-      ticket.sendingNote = false;
+      ui.sendingNote = false;
     }
   }
 
@@ -169,4 +173,3 @@ export class TicketHistory implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 }
-

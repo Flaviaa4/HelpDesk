@@ -21,6 +21,15 @@ const STATUS_VALUES: Record<string, string> = {
   Resolved: 'resolved',
 };
 
+interface TicketUiState {
+  editingStatus: boolean;
+  pendingStatus?: string;
+  addingNote: boolean;
+  noteDraft: string;
+  noteError: string;
+  sendingNote: boolean;
+}
+
 @Component({
   selector: 'app-my-tickets',
   standalone: true,
@@ -46,6 +55,15 @@ export class MyTickets implements OnInit, OnDestroy {
   loadError = '';
 
   private ticketsSub?: Subscription;
+
+  // Every real-time snapshot rebuilds `tickets` from scratch, so in-flight
+  // UI state (an open note editor, a "Sending..." flag) can't live on the
+  // ticket objects themselves — a write we make (like
+  // sending a note) triggers a fresh snapshot before our own async call
+  // finishes, replacing the object out from under it. This map is stable
+  // across rebuilds, keyed by ticket id, so mutations always land on
+  // whatever is currently rendered.
+  private uiById = new Map<string, TicketUiState>();
 
   constructor(
     private firebase: FirebaseService,
@@ -78,11 +96,27 @@ export class MyTickets implements OnInit, OnDestroy {
     this.ticketsSub?.unsubscribe();
   }
 
+  private uiFor(ticketId: string): TicketUiState {
+    let ui = this.uiById.get(ticketId);
+    if (!ui) {
+      ui = {
+        editingStatus: false,
+        pendingStatus: undefined,
+        addingNote: false,
+        noteDraft: '',
+        noteError: '',
+        sendingNote: false,
+      };
+      this.uiById.set(ticketId, ui);
+    }
+    return ui;
+  }
+
   private applySnapshot(raw: any[]) {
-    const previousById = new Map(this.tickets.map((t) => [t.id, t]));
+    const seenIds = new Set<string>();
     this.tickets = raw
       .map((t) => {
-        const prev = previousById.get(t.id);
+        seenIds.add(t.id);
         return {
           id: t.id,
           ticketNumber: t.ticketNumber || null,
@@ -94,18 +128,18 @@ export class MyTickets implements OnInit, OnDestroy {
           status: STATUS_LABELS[t.status] || t.status || 'Open',
           dateAssigned: t.createdOn || this.formatTimestamp(t.createdAt),
           createdAt: t.createdAt,
-          editingStatus: prev?.editingStatus || false,
-          pendingStatus: prev?.pendingStatus,
-          addingNote: prev?.addingNote || false,
-          noteDraft: prev?.noteDraft || '',
-          noteFile: prev?.noteFile || null,
-          noteFileError: prev?.noteFileError || '',
-          sendingNote: prev?.sendingNote || false,
           notes: t.notes || [],
           unread: !!t.unreadForTechnician,
+          ui: this.uiFor(t.id),
         };
       })
-      .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt));
+      .sort((a, b) => (a.ticketNumber || 0) - (b.ticketNumber || 0));
+
+    // Drop UI state for tickets no longer in this technician's list
+    // (reassigned elsewhere, deleted, etc.) so the map doesn't grow forever.
+    for (const id of this.uiById.keys()) {
+      if (!seenIds.has(id)) this.uiById.delete(id);
+    }
   }
 
   private timestampMillis(value: any): number {
@@ -142,32 +176,28 @@ export class MyTickets implements OnInit, OnDestroy {
   }
 
   toggleStatusEditor(ticket: any) {
-    ticket.addingNote = false;
-    ticket.editingStatus = !ticket.editingStatus;
-    if (ticket.editingStatus) {
-      ticket.pendingStatus = ticket.status;
+    ticket.ui.addingNote = false;
+    ticket.ui.editingStatus = !ticket.ui.editingStatus;
+    if (ticket.ui.editingStatus) {
+      ticket.ui.pendingStatus = ticket.status;
     }
   }
 
   async confirmStatus(ticket: any) {
-    const newLabel = ticket.pendingStatus;
+    const newLabel = ticket.ui.pendingStatus;
     const newValue = STATUS_VALUES[newLabel] || newLabel.toLowerCase();
     try {
       await this.firebase.updateTicket(ticket.id, { status: newValue });
-      ticket.status = newLabel;
     } catch (err) {
       console.error('Error updating ticket status:', err);
     }
-    ticket.editingStatus = false;
+    ticket.ui.editingStatus = false;
   }
 
   toggleNoteInput(ticket: any) {
-    ticket.editingStatus = false;
-    ticket.addingNote = !ticket.addingNote;
-    if (ticket.addingNote && ticket.noteDraft === undefined) {
-      ticket.noteDraft = '';
-    }
-    if (ticket.addingNote && ticket.unread) {
+    ticket.ui.editingStatus = false;
+    ticket.ui.addingNote = !ticket.ui.addingNote;
+    if (ticket.ui.addingNote && ticket.unread) {
       ticket.unread = false;
       this.firebase.markTicketNotesRead(ticket.id, 'unreadForTechnician').catch((err) => {
         console.error('Error marking notes read:', err);
@@ -175,47 +205,24 @@ export class MyTickets implements OnInit, OnDestroy {
     }
   }
 
-  onFileSelected(ticket: any, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0] || null;
-    ticket.noteFileError = '';
-    if (file && file.size > 10 * 1024 * 1024) {
-      ticket.noteFileError = 'File is too large (max 10MB).';
-      ticket.noteFile = null;
-      input.value = '';
-      return;
-    }
-    ticket.noteFile = file;
-  }
-
-  clearNoteFile(ticket: any) {
-    ticket.noteFile = null;
-    ticket.noteFileError = '';
-  }
-
   async sendNote(ticket: any) {
-    const text = (ticket.noteDraft || '').trim();
-    const file: File | null = ticket.noteFile || null;
-    if (!text && !file) return;
+    const ui = ticket.ui as TicketUiState;
+    const text = (ui.noteDraft || '').trim();
+    if (!text) return;
 
-    ticket.sendingNote = true;
+    ui.sendingNote = true;
     try {
-      let attachment;
-      if (file) {
-        attachment = await this.firebase.uploadTicketAttachment(ticket.id, file);
-      }
       await this.firebase.addTicketNote(
         ticket.id,
-        { author: this.userName, role: 'technician', text, attachment },
+        { author: this.userName, role: 'technician', text },
         'unreadForUser',
       );
-      ticket.noteDraft = '';
-      ticket.noteFile = null;
+      ui.noteDraft = '';
     } catch (err: any) {
       console.error('Error sending note:', err);
-      ticket.noteFileError = err?.message || 'Failed to send note.';
+      ui.noteError = 'Failed to send note.';
     } finally {
-      ticket.sendingNote = false;
+      ui.sendingNote = false;
     }
   }
 

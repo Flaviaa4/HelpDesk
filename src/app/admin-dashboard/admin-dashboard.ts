@@ -44,6 +44,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
       next: (raw) => {
         const tickets = raw.map((t) => ({
           id: t.id,
+          ticketNumber: t.ticketNumber || null,
           title: t.title || '',
           user: t.userName || 'Unknown',
           priority: t.priority || 'low',
@@ -59,7 +60,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
         this.totalCount = tickets.length;
 
         this.tickets = [...tickets]
-          .sort((a, b) => this.timestampMillis(b.createdAt) - this.timestampMillis(a.createdAt))
+          .sort((a, b) => (b.ticketNumber || 0) - (a.ticketNumber || 0))
           .slice(0, 5);
 
         this.loading = false;
