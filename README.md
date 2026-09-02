@@ -26,7 +26,7 @@ It is designed to make communication between users and IT support teams easier a
 
 ## Credentials of default users
 
-Accounts aren't seeded with fixed emails — a user's role is assigned automatically at sign-up based on their email domain:
+Accounts aren't seeded with fixed emails, a user's role is assigned automatically at sign-up based on their email domain:
 
 - Normal User: any email ending in **@uhelpdesk.com**
 - Technician: any email ending in **@thelpdesk.com**
@@ -57,7 +57,7 @@ The system has two main parts:
 ## Tools & Technologies Used
 
 - **Angular CLI** - for project development & building
-- **Firebase** – Authentication and Cloud Firestore for the real-time database
+- **Firebase** – Authentication and Cloud Firestore for the real-time database(for now)
 - **VS Code** – for development
 - **Git & GitHub** – for version control
 
