@@ -39,7 +39,7 @@ Sign up with an email in the matching domain to create an account with that role
 The system has two main parts:
 
 - **Frontend:** Angular application handling the interface and all user interactions
-- **Firebase (Auth + Firestore):** Firebase Authentication manages sign-up/login, and Cloud Firestore acts as the real-time database, storing users, tickets, and ticket messages. There is no separate custom backend server — the frontend talks to Firebase directly, governed by Firestore security rules.
+- **Firebase (Auth + Firestore):** Firebase Authentication manages sign-up/login, and Cloud Firestore acts as the real-time database, storing users, tickets, and ticket messages. There is no separate custom backend server, the frontend talks to Firebase directly, governed by Firestore security rules.
 
 
 ## What Has Been Built So Far
@@ -52,7 +52,7 @@ The system has two main parts:
 - Admin tools to view all tickets, assign/reassign technicians, delete tickets, and manage users (including role filtering and department assignment)
 - Per-ticket messaging between a user and their assigned technician, with unread indicators
 - Sequential, human-readable ticket numbers (01, 02, ...)
-- Real-time updates throughout — ticket status, assignment, and messages appear live without needing a page refresh
+- Real-time updates throughout ticket status, assignment, and messages appear live without needing a page refresh
 
 ## Tools & Technologies Used
 
