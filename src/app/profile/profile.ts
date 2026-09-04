@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FirebaseService } from '../services/firebase';
@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   constructor(
     private firebase: FirebaseService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   async ngOnInit() {
@@ -55,13 +56,21 @@ export class ProfileComponent implements OnInit {
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:click')
   closeDropdown() {
+    if (!this.profileOpen) return;
     this.profileOpen = false;
+    this.cdr.detectChanges();
   }
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);

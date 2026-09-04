@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -32,6 +32,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
   constructor(
     private firebase: FirebaseService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userName = (user.role || '').toLowerCase().trim() === 'admin' ? user.name : 'Admin';
@@ -90,9 +91,15 @@ export class AdminDashboard implements OnInit, OnDestroy {
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
+    this.cdr.detectChanges();
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);

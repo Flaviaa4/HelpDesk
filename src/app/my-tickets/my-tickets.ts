@@ -226,7 +226,12 @@ export class MyTickets implements OnInit, OnDestroy {
     }
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);

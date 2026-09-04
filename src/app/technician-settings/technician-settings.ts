@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header';
 import { SidebarComponent } from '../shared/sidebar/sidebar';
+import { FirebaseService } from '../services/firebase';
 
 @Component({
   selector: 'app-technician-settings',
@@ -25,7 +26,10 @@ export class TechnicianSettings {
   timezone = 'Africa/Kigali';
   dateFormat = 'DD-MM-YYYY';
 
-  constructor(private router: Router) {}
+  constructor(
+    private firebase: FirebaseService,
+    private router: Router,
+  ) {}
 
   savePreferences() {
     console.log('Notification preferences saved');
@@ -41,7 +45,12 @@ export class TechnicianSettings {
     this.dateFormat = 'DD-MM-YYYY';
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);

@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { FirebaseService } from '../services/firebase';
 
 @Component({
   selector: 'app-settings',
@@ -14,15 +15,22 @@ export class SettingsComponent {
 
   userName = 'Admin User';
 
-  constructor(private router: Router) {}
+  constructor(
+    private firebase: FirebaseService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:click')
   closeDropdown() {
+    if (!this.profileOpen) return;
     this.profileOpen = false;
+    this.cdr.detectChanges();
   }
 
   savePreferences() {
@@ -41,7 +49,12 @@ export class SettingsComponent {
     console.log('Settings reset to default');
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);

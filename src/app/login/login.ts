@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -21,16 +21,22 @@ export class Login {
   constructor(
     private firebase: FirebaseService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   async login() {
     if (!this.username || !this.password) {
       this.errorMsg = 'Please fill in all fields.';
+      this.cdr.detectChanges();
       return;
     }
 
     this.loading = true;
     this.errorMsg = '';
+    // Change detection doesn't reliably re-run synchronously after this
+    // click before the `await` below, so force it here — otherwise the
+    // "Signing in..." state never paints until the navigation lands.
+    this.cdr.detectChanges();
 
     try {
       const user = await this.firebase.login(this.username, this.password);
@@ -49,6 +55,7 @@ export class Login {
         err?.code === 'account-not-found'
           ? 'This account no longer exists. Please contact your administrator.'
           : 'Invalid email or password.';
+      this.cdr.detectChanges();
     }
   }
 }

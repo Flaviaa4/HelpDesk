@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -34,13 +34,15 @@ export class Tickets implements OnInit, OnDestroy {
   successMsg = '';
   loadError = '';
 
-  deletingTicketId: string | null = null;
+  bulkDeleteOpen = false;
+  selectedTicketIds = new Set<string>();
 
   private ticketsSub?: Subscription;
 
   constructor(
     private firebase: FirebaseService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userName = (user.role || '').toLowerCase().trim() === 'admin' ? user.name : 'Admin';
@@ -115,8 +117,37 @@ export class Tickets implements OnInit, OnDestroy {
     this.currentPage = 1;
   }
 
+  isSelected(ticketId: string) {
+    return this.selectedTicketIds.has(ticketId);
+  }
+
+  toggleSelect(ticketId: string, checked: boolean) {
+    if (checked) {
+      this.selectedTicketIds.add(ticketId);
+    } else {
+      this.selectedTicketIds.delete(ticketId);
+    }
+    this.cdr.detectChanges();
+  }
+
+  get allPagedSelected() {
+    return this.pagedTickets.length > 0 && this.pagedTickets.every((t) => this.selectedTicketIds.has(t.id));
+  }
+
+  toggleSelectAll(checked: boolean) {
+    for (const t of this.pagedTickets) {
+      if (checked) {
+        this.selectedTicketIds.add(t.id);
+      } else {
+        this.selectedTicketIds.delete(t.id);
+      }
+    }
+    this.cdr.detectChanges();
+  }
+
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
+    this.cdr.detectChanges();
   }
 
   openAssign(ticket: any) {
@@ -154,25 +185,44 @@ export class Tickets implements OnInit, OnDestroy {
     }
   }
 
-  deleteTicket(ticketId: string) {
-    this.deletingTicketId = ticketId;
+  openBulkDelete() {
+    if (this.selectedTicketIds.size === 0) return;
+    this.bulkDeleteOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  get deleteModalTitle() {
+    return this.selectedTicketIds.size === 1 ? 'Delete ticket' : 'Delete tickets';
+  }
+
+  get deleteModalMessage() {
+    return `Are you sure you want to delete ${this.selectedTicketIds.size} selected ticket${this.selectedTicketIds.size === 1 ? '' : 's'}? This cannot be undone.`;
   }
 
   cancelDeleteTicket() {
-    this.deletingTicketId = null;
+    this.bulkDeleteOpen = false;
+    this.cdr.detectChanges();
   }
 
   async confirmDeleteTicket() {
-    if (!this.deletingTicketId) return;
+    const ids = [...this.selectedTicketIds];
     try {
-      await this.firebase.deleteTicket(this.deletingTicketId);
+      await Promise.all(ids.map((id) => this.firebase.deleteTicket(id)));
+      this.selectedTicketIds.clear();
     } catch (err) {
-      console.error('Error deleting ticket:', err);
+      console.error('Error deleting tickets:', err);
+      this.errorMsg = 'Failed to delete one or more tickets.';
     }
-    this.deletingTicketId = null;
+    this.bulkDeleteOpen = false;
+    this.cdr.detectChanges();
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);

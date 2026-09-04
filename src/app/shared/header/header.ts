@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -17,6 +17,8 @@ export class HeaderComponent {
 
   profileOpen = false;
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   get settingsLink() {
     return this.role === 'technician' ? '/technician-settings' : '/u-settings';
   }
@@ -31,11 +33,16 @@ export class HeaderComponent {
 
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
+    // Forces the dropdown to actually paint on click — plain synchronous
+    // state changes from event handlers don't reliably re-render otherwise.
+    this.cdr.detectChanges();
   }
 
   @HostListener('document:click')
   closeDropdown() {
+    if (!this.profileOpen) return;
     this.profileOpen = false;
+    this.cdr.detectChanges();
   }
 
   onLogout() {

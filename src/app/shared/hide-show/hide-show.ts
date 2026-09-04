@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -17,8 +17,11 @@ export class HideShowComponent {
 
   showPassword = false;
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   togglePassword() {
     this.showPassword = !this.showPassword;
+    this.cdr.detectChanges();
   }
 
   updatePassword(event: Event) {

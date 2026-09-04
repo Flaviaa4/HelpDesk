@@ -104,7 +104,12 @@ export class SubmitTicket implements OnInit {
     this.router.navigate(['/user-dashboard']);
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }

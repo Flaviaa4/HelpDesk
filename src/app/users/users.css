@@ -225,6 +225,26 @@
   gap: 1rem;
 }
 
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  background: #EEF2F8;
+  border: 1px solid #D5DCE8;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #14396A;
+  font-weight: 600;
+}
+
+.users-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
 .search-input-wrap {
   position: relative;
   flex: 1;
@@ -403,23 +423,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(100, 120, 200, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.user-avatar svg {
-  width: 18px;
-  height: 18px;
-  fill: #7B8FD4;
 }
 
 .status-dot {

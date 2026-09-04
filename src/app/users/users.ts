@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -32,7 +32,8 @@ export class Users implements OnInit, OnDestroy {
   successMsg = '';
   errorMsg = '';
 
-  deletingUserId: string | null = null;
+  bulkDeleteOpen = false;
+  selectedUserIds = new Set<string>();
 
   profileOpen = false;
   adminName = '';
@@ -42,6 +43,7 @@ export class Users implements OnInit, OnDestroy {
   constructor(
     private firebase: FirebaseService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.adminName = (user.role || '').toLowerCase().trim() === 'admin' ? user.name : 'Admin';
@@ -88,8 +90,37 @@ export class Users implements OnInit, OnDestroy {
     this.currentPage = 1;
   }
 
+  isSelected(userId: string) {
+    return this.selectedUserIds.has(userId);
+  }
+
+  toggleSelect(userId: string, checked: boolean) {
+    if (checked) {
+      this.selectedUserIds.add(userId);
+    } else {
+      this.selectedUserIds.delete(userId);
+    }
+    this.cdr.detectChanges();
+  }
+
+  get allPagedSelected() {
+    return this.pagedUsers.length > 0 && this.pagedUsers.every((u) => this.selectedUserIds.has(u.id));
+  }
+
+  toggleSelectAll(checked: boolean) {
+    for (const u of this.pagedUsers) {
+      if (checked) {
+        this.selectedUserIds.add(u.id);
+      } else {
+        this.selectedUserIds.delete(u.id);
+      }
+    }
+    this.cdr.detectChanges();
+  }
+
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
+    this.cdr.detectChanges();
   }
 
   toggleMenu() {
@@ -113,6 +144,7 @@ export class Users implements OnInit, OnDestroy {
       this.errorMsg = 'Please select a department.';
       return;
     }
+    // Optimistically update the UI before awaiting the Firebase call
     try {
       await this.firebase.updateUser(this.editingUser.id, {
         department: this.selectedDepartment,
@@ -125,25 +157,43 @@ export class Users implements OnInit, OnDestroy {
     }
   }
 
-  deleteUser(userId: string) {
-    this.deletingUserId = userId;
+  openBulkDelete() {
+    if (this.selectedUserIds.size === 0) return;
+    this.bulkDeleteOpen = true;
+    this.cdr.detectChanges();
+  }
+
+  get deleteModalTitle() {
+    return this.selectedUserIds.size === 1 ? 'Delete user' : 'Delete users';
+  }
+
+  get deleteModalMessage() {
+    return `Are you sure you want to delete ${this.selectedUserIds.size} selected user${this.selectedUserIds.size === 1 ? '' : 's'}? This cannot be undone.`;
   }
 
   cancelDeleteUser() {
-    this.deletingUserId = null;
+    this.bulkDeleteOpen = false;
+    this.cdr.detectChanges();
   }
 
   async confirmDeleteUser() {
-    if (!this.deletingUserId) return;
+    const ids = [...this.selectedUserIds];
     try {
-      await this.firebase.deleteUser(this.deletingUserId);
+      await Promise.all(ids.map((id) => this.firebase.deleteUser(id)));
+      this.selectedUserIds.clear();
     } catch {
-      this.errorMsg = 'Failed to delete user.';
+      this.errorMsg = 'Failed to delete one or more users.';
     }
-    this.deletingUserId = null;
+    this.bulkDeleteOpen = false;
+    this.cdr.detectChanges();
   }
 
-  logout() {
+  async logout() {
+    try {
+      await this.firebase.logout();
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
