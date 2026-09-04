@@ -89,6 +89,20 @@ export class AdminDashboard implements OnInit, OnDestroy {
     return millis ? new Date(millis).toISOString().split('T')[0] : '';
   }
 
+  get filteredTickets() {
+    const term = this.searchTerm.toLowerCase().trim();
+    return this.tickets.filter((t) => {
+      const matchesSearch =
+        !term || t.title.toLowerCase().includes(term) || t.user.toLowerCase().includes(term);
+      const matchesPriority = !this.selectedPriority || t.priority === this.selectedPriority;
+      return matchesSearch && matchesPriority;
+    });
+  }
+
+  applyFilters() {
+    this.cdr.detectChanges();
+  }
+
   toggleProfile() {
     this.profileOpen = !this.profileOpen;
     this.cdr.detectChanges();

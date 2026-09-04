@@ -88,6 +88,7 @@ export class Users implements OnInit, OnDestroy {
 
   resetPage() {
     this.currentPage = 1;
+    this.cdr.detectChanges();
   }
 
   isSelected(userId: string) {
@@ -132,16 +133,19 @@ export class Users implements OnInit, OnDestroy {
     this.selectedDepartment = user.department || '';
     this.successMsg = '';
     this.errorMsg = '';
+    this.cdr.detectChanges();
   }
 
   closeAssignDept() {
     this.editingUser = null;
     this.selectedDepartment = '';
+    this.cdr.detectChanges();
   }
 
   async saveDepartment() {
     if (!this.selectedDepartment) {
       this.errorMsg = 'Please select a department.';
+      this.cdr.detectChanges();
       return;
     }
     // Optimistically update the UI before awaiting the Firebase call
@@ -151,9 +155,11 @@ export class Users implements OnInit, OnDestroy {
       });
       this.editingUser.department = this.selectedDepartment;
       this.successMsg = 'Department assigned successfully!';
+      this.cdr.detectChanges();
       setTimeout(() => this.closeAssignDept(), 1500);
     } catch {
       this.errorMsg = 'Failed to assign department.';
+      this.cdr.detectChanges();
     }
   }
 
